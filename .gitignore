@@ -28,3 +28,4 @@ build/**
 !libs/**/*.jar
 out/production
 .idea
+.gradle
