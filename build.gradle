@@ -34,7 +34,8 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: '2.1.0.RELEASE'
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
-
+    compile group: 'com.jfoenix', name: 'jfoenix', version: '1.11.1'
+    
 
     testCompile group: 'junit', name: 'junit', version: $junitVersion
     testCompile group: 'uk.org.lidalia', name: 'slf4j-test', version: '1.2.0'

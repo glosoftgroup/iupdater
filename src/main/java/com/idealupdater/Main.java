@@ -15,7 +15,7 @@ public class Main {
     public static final String LOG_TAG = "Main";
 
     public static void init(){
-        logger.bind("test", "test");
+        logger.bind("MainWindow", "MainWindow");
         // initialise background service
         logger.info(LOG_TAG, "event", "Initialize services");
     }

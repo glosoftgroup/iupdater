@@ -2,6 +2,7 @@ package com.idealupdater.utils.ui;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
+import javafx.application.Platform;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -13,8 +14,18 @@ public class SystemTrayUtils {
     private static SystemTrayUtils instance = null;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "SystemTrayUtils";
+    public static TrayIcon trayIcon =
+            new TrayIcon(createImage("etraybulb.gif", "tray icon"));
 
-    private SystemTrayUtils() {}
+    public SystemTrayUtils() {
+        trayIcon.setImageAutoSize(true);
+    }
+
+    public enum Level {
+        INFO,
+        ERROR,
+        WARNING
+    }
 
     public static SystemTrayUtils getInstance () {
         if (instance == null) {
@@ -54,9 +65,9 @@ public class SystemTrayUtils {
             return;
         }
         final PopupMenu popup = new PopupMenu();
-        final TrayIcon trayIcon =
-                new TrayIcon(createImage("etraybulb.gif", "tray icon"));
-        trayIcon.setImageAutoSize(true);
+//        final TrayIcon trayIcon =
+//                new TrayIcon(createImage("etraybulb.gif", "tray icon"));
+//        trayIcon.setImageAutoSize(true);
         final SystemTray tray = SystemTray.getSystemTray();
         // Create a popup menu components
         MenuItem aboutItem = new MenuItem("About");
@@ -90,8 +101,11 @@ public class SystemTrayUtils {
         }
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,
-                        "This dialog box is run from System Tray");
+//                JOptionPane.showMessageDialog(null,
+//                        "This dialog box is run from System Tray");
+
+                new MainWindow().launch();
+
             }
         });
 
@@ -174,6 +188,26 @@ public class SystemTrayUtils {
         } else {
             return (new ImageIcon(imageURL, description)).getImage();
         }
+    }
+
+    public void displayMessage(String message, Level level){
+        TrayIcon.MessageType messageType;
+        switch(level) {
+            case INFO:
+                messageType = TrayIcon.MessageType.INFO;
+                break;
+            case ERROR:
+                messageType = TrayIcon.MessageType.ERROR;
+                break;
+            case WARNING:
+                messageType = TrayIcon.MessageType.WARNING;
+                break;
+            default:
+                  messageType = TrayIcon.MessageType.INFO;
+        }
+
+        trayIcon.displayMessage("Sun TrayIcon Demo",
+                message, messageType);
     }
 
 }
