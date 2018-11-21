@@ -27,3 +27,4 @@ build/**
 *.jar
 !libs/**/*.jar
 out/production
+.idea
