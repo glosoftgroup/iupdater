@@ -9,8 +9,6 @@ public class CheckVersionWorker implements Runnable{
 
     @Override
     public void run() {
-
-        logger.info(LOG_TAG, "event", "checking the version");
-
+        logger.info(LOG_TAG, "event","check_version", "message", "checking the version");
     }
 }
