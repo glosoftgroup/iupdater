@@ -37,7 +37,7 @@ public class FileDownloader {
         FileOutputStream fos = null;
 
         String tempDir = System.getProperty("user.dir");
-        String outputPath = tempDir + "/tmp/" + saveAsLocalFileName;
+        String outputPath = tempDir + "/src/main/resources/tmp/" + saveAsLocalFileName;
 
         try {
             URLConnection urlConnection = url.openConnection();

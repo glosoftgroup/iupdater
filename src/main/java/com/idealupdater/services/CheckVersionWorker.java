@@ -17,11 +17,14 @@ public class CheckVersionWorker implements Runnable{
         logger.info(LOG_TAG, "event","check_version", "custom_message", "checking the version");
         try {
             String result = FileDownloader.downloadFromUrl(
-                    new URL("https://github.com/glosoftgroup/updaterconfig/blob/master/frontend_updater_config.json"),
+                    new URL("https://raw.githubusercontent.com/glosoftgroup/updaterconfig/master/backend_updater_config.json"),
                     "frontend_updater_config.json");
 
             JSONObject jsonObject = new FileUtils().readConfigJsonObj(result);
             String version = (String) jsonObject.get("version");
+
+            logger.info(LOG_TAG, "event", "Read_config_file", "custom_message",
+                    "fetching version", "version", version);
 
 
         }catch (Exception e){
