@@ -9,6 +9,8 @@ import java.util.*;
 
 public class FileUtils {
 
+    public void FileUtils(){}
+
     /**
      * Opens and reads a file, and returns the contents as one String.
      */
