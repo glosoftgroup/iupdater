@@ -31,7 +31,7 @@ public class MainWindow {
                 });
 
             } catch (Exception e) {
-                logger.error(LOG_TAG, "event", "show main window", "message", e.getMessage());
+                logger.error(LOG_TAG, "event", "show main window", "custom_message", e.getMessage());
             }
 
         });

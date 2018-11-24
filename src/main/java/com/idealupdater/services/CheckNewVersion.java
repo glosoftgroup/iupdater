@@ -39,15 +39,15 @@ public class CheckNewVersion {
         try {
 
             if (!pool.awaitTermination(5, TimeUnit.MINUTES)) {
-                logger.info(LOG_TAG, "event","Executor_Shutdown_wait", "message",
+                logger.info(LOG_TAG, "event","Executor_Shutdown_wait", "custom_message",
                         "waiting for some unfinished task to complete");
                 pool.shutdownNow();
             }else{
-                logger.info(LOG_TAG, "event","Executor_Shutdown_successful", "message",
+                logger.info(LOG_TAG, "event","Executor_Shutdown_successful", "custom_message",
                         "Executor pool completed all tasks, shutting down");
             }
         } catch (Exception e){
-            logger.error(LOG_TAG, "event", "Executor_Shutdown_error", "message",
+            logger.error(LOG_TAG, "event", "Executor_Shutdown_error", "custom_message",
                     "error shutting down the thread pool", e.getMessage());
             pool.shutdownNow();
             Thread.currentThread().interrupt();

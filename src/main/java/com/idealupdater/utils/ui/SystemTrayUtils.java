@@ -183,7 +183,7 @@ public class SystemTrayUtils {
         URL imageURL = SystemTrayUtils.class.getClassLoader().getResource(path);
         if (imageURL == null) {
             String message = "Resource not found: " + path;
-            logger.error(LOG_TAG, "event", "Not suported", "message", message);
+            logger.error(LOG_TAG, "event", "Not suported", "custom_message", message);
             return null;
         } else {
             return (new ImageIcon(imageURL, description)).getImage();

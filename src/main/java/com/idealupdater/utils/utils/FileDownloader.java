@@ -1,5 +1,8 @@
 package com.idealupdater.utils.utils;
 
+import com.idealupdater.utils.structlog4j.LoggerFactory;
+import com.idealupdater.utils.structlog4j.interfaces.Logger;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +27,8 @@ import java.net.URLConnection;
  * */
 
 public class FileDownloader {
+    public static final Logger logger = LoggerFactory.getLogger(FileDownloader.class);
+    public static final String LOG_TAG = "FileDownloader";
 
     public void  FileDownloader(){}
 
@@ -47,13 +52,15 @@ public class FileDownloader {
             }
 
         } catch (Exception e){
-
+            logger.error(LOG_TAG, "event", "Download_file_error", "custom_message",
+                    "Downloading file error occurred: " + e.getMessage());
         } finally {
             try {
                 if (ins != null) ins.close();
                 if (fos != null) fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(LOG_TAG, "event", "closing_stream_error", "custom_message",
+                        "closing stream error occurred: " + e.getMessage());
             }
         }
 

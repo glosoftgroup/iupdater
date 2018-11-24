@@ -48,7 +48,7 @@ public class DownloadFileTask extends Task<Void> {
         OutputStream os = null;
         try {
 
-            logger.info(LOG_TAG, "event", "Download_file", "message",
+            logger.info(LOG_TAG, "event", "Download_file", "custom_message",
                     "Downloading file with url "+ url);
 
             String ext = url.substring(url.lastIndexOf("."), url.length());
@@ -69,8 +69,8 @@ public class DownloadFileTask extends Task<Void> {
             }
 
         } catch (Exception e){
-            logger.error(LOG_TAG, "event", "Download_file_error", "message",
-                    "Downloading file error occurred");
+            logger.error(LOG_TAG, "event", "Download_file_error", "custom_message",
+                    "Downloading file error occurred : "+ e.getMessage());
         } finally {
             try {
                 if (in != null) in.close();
