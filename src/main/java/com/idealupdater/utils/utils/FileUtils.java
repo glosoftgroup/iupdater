@@ -1,13 +1,15 @@
 package com.idealupdater.utils.utils;
 
-import org.json.simple.JSONArray;
+import com.idealupdater.utils.structlog4j.LoggerFactory;
+import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.*;
-import java.util.*;
 
 public class FileUtils {
+    public static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
+    public static final String LOG_TAG = "FileUtils";
 
     public void FileUtils(){}
 
@@ -32,9 +34,6 @@ public class FileUtils {
 
         JSONObject jsonObject = null;
 
-        // TODO: 1. read json file
-        // TODO: 2. parse data form map
-
         try {
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(new FileReader(filename));
@@ -42,7 +41,7 @@ public class FileUtils {
             jsonObject = (JSONObject) obj;
 
         } catch (Exception e) {
-
+            logger.error(LOG_TAG, "event","read_config_obj", "error", e.getMessage());
         }
 
         return jsonObject;

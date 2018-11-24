@@ -76,7 +76,8 @@ public class DownloadFileTask extends Task<Void> {
                 if (in != null) in.close();
                 if (os != null) os.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(LOG_TAG, "event", "closing_streams", "custom_message",
+                        "Error closing input and output streams : "+ e.getMessage());
             } finally {
                 in.close();
                 os.close();
