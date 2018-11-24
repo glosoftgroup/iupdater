@@ -4,6 +4,7 @@ import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import javafx.concurrent.Task;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -43,7 +44,8 @@ public class DownloadFileTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-
+        InputStream in = null;
+        OutputStream os = null;
         try {
 
             logger.info(LOG_TAG, "event", "Download_file", "message",
@@ -53,8 +55,8 @@ public class DownloadFileTask extends Task<Void> {
             URLConnection connection = new URL(url).openConnection();
             long fileLength = connection.getContentLength();
 
-            InputStream in = connection.getInputStream();
-            OutputStream os = Files.newOutputStream(Paths.get("downloadedfile" + ext));
+            in = connection.getInputStream();
+            os = Files.newOutputStream(Paths.get("downloadedfile" + ext));
 
             long nread = 0L;
             byte[] buf = new byte[8192];
@@ -69,6 +71,16 @@ public class DownloadFileTask extends Task<Void> {
         } catch (Exception e){
             logger.error(LOG_TAG, "event", "Download_file_error", "message",
                     "Downloading file error occurred");
+        } finally {
+            try {
+                if (in != null) in.close();
+                if (os != null) os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                in.close();
+                os.close();
+            }
         }
 
         return null;
