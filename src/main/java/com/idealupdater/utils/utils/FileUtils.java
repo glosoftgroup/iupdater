@@ -1,7 +1,7 @@
 package com.idealupdater.utils.utils;
 
 import java.io.*;
-import java.util.Properties;
+import java.util.*;
 
 public class FileUtils {
 
@@ -50,7 +50,7 @@ public class FileUtils {
     public static Map<String, String> readPropertiesFileAsMap(String filename, String delimiter)
             throws Exception
     {
-        Map<String, String> map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String line;
         while ((line = reader.readLine()) != null)
