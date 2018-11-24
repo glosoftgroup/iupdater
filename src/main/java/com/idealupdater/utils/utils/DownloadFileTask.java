@@ -1,4 +1,4 @@
-package com.idealupdater.services;
+package com.idealupdater.utils.utils;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
@@ -19,14 +19,14 @@ import java.nio.file.Paths;
  * Usage
  *
  * <code>
- *  Task<Void> task = new DownloadTask("https://some.url.com/path/file/location");
- *  ProgressBar progressBar = new ProgressBar();
- *  progressBar.setPrefWidth(350);
- *  progressBar.progressProperty().bind(task.progressProperty());
- *  root.getChildren().add(progressBar);
- *  Thread thread = new Thread(task);
- *  thread.setDaemon(true);
- *  thread.start();
+ *      Task<Void> task = new DownloadTask("https://some.url.com/path/file/location");
+ *      ProgressBar progressBar = new ProgressBar();
+ *      progressBar.setPrefWidth(350);
+ *      progressBar.progressProperty().bind(task.progressProperty());
+ *      root.getChildren().add(progressBar);
+ *      Thread thread = new Thread(task);
+ *      thread.setDaemon(true);
+ *      thread.start();
  * </code>
  *
  * */
