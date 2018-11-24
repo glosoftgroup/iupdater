@@ -28,7 +28,7 @@ public class CheckVersionWorker implements Runnable{
 
 
         }catch (Exception e){
-
+            logger.error(LOG_TAG, "event","extracting_downloaded_file_obj", "error", e.getMessage());
         }
     }
 }
