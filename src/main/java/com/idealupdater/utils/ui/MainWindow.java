@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MainWindow {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
@@ -22,11 +23,12 @@ public class MainWindow {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainWindow.fxml"));
                 Parent root = loader.load();
-                jfxPanel.setScene(new Scene(root, 500, 400));
+                jfxPanel.setScene(new Scene(root));
 
                 SwingUtilities.invokeLater(() -> {
                     window.add(jfxPanel);
                     window.pack();
+                    window.setLocationRelativeTo(null); // centers the window
                     window.setVisible(true);
                 });
 
