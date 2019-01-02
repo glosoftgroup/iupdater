@@ -9,11 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class MainWindow {
+public class CheckUpdate {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
-    public static final String LOG_TAG = "MainWindow";
+    public static final String LOG_TAG = "CheckUpdate";
 
     public void launch(){
         JFrame window = new JFrame();
@@ -21,7 +20,7 @@ public class MainWindow {
         Platform.runLater(() -> {
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainWindow.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/CheckUpdate.fxml"));
                 Parent root = loader.load();
                 jfxPanel.setScene(new Scene(root));
 

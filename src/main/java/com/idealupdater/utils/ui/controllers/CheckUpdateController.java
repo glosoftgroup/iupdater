@@ -15,9 +15,9 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainWindowController implements Initializable {
+public class CheckUpdateController implements Initializable {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
-    public static final String LOG_TAG = "MainWindow";
+    public static final String LOG_TAG = "CheckUpdate";
     @FXML JFXButton test_btn;
     @FXML Label rpi_label;
     @FXML StackPane stackPane;

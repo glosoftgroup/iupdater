@@ -17,7 +17,7 @@ public class Main {
     public static CheckNewVersion chknv;
 
     public static void init(){
-        logger.bind("MainWindow", "MainWindow");
+        logger.bind("CheckUpdate", "CheckUpdate");
         // initialise background service
         chknv = new CheckNewVersion();
 

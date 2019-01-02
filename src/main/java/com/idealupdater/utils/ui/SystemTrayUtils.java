@@ -1,9 +1,7 @@
 package com.idealupdater.utils.ui;
 
-import com.idealupdater.Main;
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
-import javafx.application.Platform;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -134,7 +132,7 @@ public class SystemTrayUtils {
         }
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new MainWindow().launch();
+                new CheckUpdate().launch();
 
             }
         });
@@ -199,7 +197,7 @@ public class SystemTrayUtils {
         frUpdatesItem.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 try {
-                    new MainWindow().launch();
+                    new CheckUpdate().launch();
                 } catch (Exception ex) {
                     System.out.println("Exception " + ex);
                     logger.error(LOG_TAG, "event", "open_client_log_directory",

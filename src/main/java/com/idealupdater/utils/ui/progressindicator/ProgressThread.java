@@ -32,6 +32,9 @@ public class ProgressThread extends Thread {
             progress ++;
             /**
              * progress > 100 ensures the while loop runs only once
+             * This is also very true for every action there is a reaction
+             *
+             *
              * */
             if(progress>100){
                 Platform.runLater(()-> {
