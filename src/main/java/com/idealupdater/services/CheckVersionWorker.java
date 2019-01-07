@@ -14,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 
 public class CheckVersionWorker implements Runnable{
     public static final Logger logger = LoggerFactory.getLogger(CheckVersionWorker.class);
@@ -32,7 +31,8 @@ public class CheckVersionWorker implements Runnable{
             String remoteVersion = (String) jsonObject.get("version");
             logger.info(LOG_TAG, "event", "Read_remote_config_file", "custom_message",
                     "fetching remote version", "version", remoteVersion);
-
+            // search the file dynamically through C:\\ and return the path
+            // choose the path that is specified through the settings interface
             String appPath = System.getenv("ProgramFiles(X86)") + "\\ClassicPOS Server\\ClassicPOS Server\\backend_updater_config.json";
             File f = new File(appPath);
             if (f.exists() && f.isFile()) {
@@ -57,10 +57,11 @@ public class CheckVersionWorker implements Runnable{
                     logger.error(LOG_TAG, "event","Reading_local_file_obj", "error", e.getMessage());
                 }
 
-                if(!remoteVersion.equals(localVersion)){
-                    // show the new updates message
-                    new SystemTrayUtils().displayMessage("New updates detected", SystemTrayUtils.Level.INFO);
-                }
+                // uncomment after solving the run once inside the thread
+//                if(!remoteVersion.equals(localVersion)){
+//                    // show the new updates message
+//                    new SystemTrayUtils().displayMessage("New updates detected", SystemTrayUtils.Level.INFO);
+//                }
             }else{
                 logger.info(LOG_TAG, "event", "Read_local_config_file_path", "custom_message",
                         "file not exist", "path", appPath);

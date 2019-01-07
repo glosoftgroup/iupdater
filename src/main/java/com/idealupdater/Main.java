@@ -29,7 +29,6 @@ public class Main {
         StructLog4JConfig.setContextSupplier(
                 new GenericLoggableObject(new Object[]{"environment", "development"}));
         init();
-        // show the TrayIcon with progress bar update
         logger.info(LOG_TAG, "event", "Application started");
 
         SystemTrayUtils.getInstance().viewTray();

@@ -2,6 +2,7 @@ package com.idealupdater.utils.ui;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
+import com.idealupdater.utils.ui.controllers.UpdateViewController;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +11,9 @@ import javafx.scene.Scene;
 
 import javax.swing.*;
 
-public class CheckUpdate {
+public class UpdateView {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
-    public static final String LOG_TAG = "CheckUpdate";
+    public static final String LOG_TAG = "ViewUpdate";
 
     public void launch(){
         JFrame window = new JFrame();
@@ -20,7 +21,7 @@ public class CheckUpdate {
         Platform.runLater(() -> {
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/CheckUpdate.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/UpdateView.fxml"));
                 Parent root = loader.load();
                 jfxPanel.setScene(new Scene(root));
 
@@ -37,6 +38,5 @@ public class CheckUpdate {
 
         });
     }
-
 
 }
