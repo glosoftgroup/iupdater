@@ -1,0 +1,77 @@
+
+* {
+    -fx-purple : #54039b;
+    -fx-blue: #0494ed;
+    -fx-green: #8cc414;
+}
+
+/* sidebar */
+.sidebar{
+    -fx-background-color: #17344f;
+}
+.sidebarBtn
+{
+    -fx-background-color: derive(-fx-primary, 10%);
+    -fx-background-radius: 0px;
+    -fx-border-radius: 0px;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-border-width: 0.1em 0px 0px 0px;
+    -fx-border-color: rgba(0,0,0, 0.2);
+    -fx-background-color: #17344f;
+}
+.sidebarBtn:hover
+{
+    -fx-background-color: #163c60;
+    -fx-text-fill: white;
+}
+
+.sidebarBtn .glyph-icon
+{
+    -fx-fill: #afb0c0;
+}
+
+.sidebarBtn-active, .sidebarBtn-active:hover
+{
+    -fx-background-color:  -fx-blue;
+    -fx-text-fill: white;
+}
+
+.sidebarBtn-active:hover
+{
+    -fx-background-color:  #0386d3;
+    -fx-text-fill: white;
+}
+
+
+.sidebarBtn-active .glyph-icon
+{
+    -fx-fill: white;
+}
+
+/* content */
+.content{
+    -fx-background-color:  #17344f;
+}
+
+/* update button */
+.updateBtn{
+    -fx-background-color: -fx-purple;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.consolePane{
+    -fx-background-color: black;
+    -fx-background-radius: 3px;
+    -fx-border-radius: 3px;
+}
+
+.noUpdateLabel .glyph-icon{
+    -fx-fill: -fx-purple;
+}
+
+.jfx-progress-bar > .bar {
+    -fx-background-color: orange;
+}

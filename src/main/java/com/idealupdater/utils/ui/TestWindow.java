@@ -29,7 +29,7 @@ public class TestWindow extends Application {
         try {
             start(new Stage());
         } catch (IOException ex) {
-            logger.error(LOG_TAG, "event", "launching stage", "message", ex.getMessage());
+            logger.error(LOG_TAG, "event", "launching stage", "custom_message", ex.getMessage());
         }
     }
 

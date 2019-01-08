@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 
 public class TestWindowController implements Initializable {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
-    public static final String LOG_TAG = "MainWindow";
+    public static final String LOG_TAG = "CheckUpdate";
     @FXML JFXButton btn;
 
     @Override

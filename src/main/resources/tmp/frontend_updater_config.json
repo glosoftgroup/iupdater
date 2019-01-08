@@ -1,0 +1,21 @@
+{
+  "version": "1.0.4",
+  "last_version": "1.0.2",
+  "changelog": {
+    "date": "Images/Sun.png",
+    "name": "sun1",
+    "notes": "<notes>"
+  },
+  "target": "1.0.1",
+  "type": "backend",
+  "packagejson": true,
+  "migrations": true,
+  "webpackconfig": true,
+  "targetmachine": "mac-address",
+  "commithash": "<hash>",
+  "changedfiles": [
+    "src/main/java/com/idealupdater/services/CheckVersionWorker.java",
+    "mac-address",
+    "src/main/java/com/idealupdater/services/CheckVersionWorker.java"
+  ]
+}

@@ -2,10 +2,12 @@ package com.idealupdater.utils.ui;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
-import javafx.application.Platform;
+import com.idealupdater.utils.utils.Prefs;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import javax.swing.*;
 
@@ -65,75 +67,96 @@ public class SystemTrayUtils {
             return;
         }
         final PopupMenu popup = new PopupMenu();
-//        final TrayIcon trayIcon =
-//                new TrayIcon(createImage("etraybulb.gif", "tray icon"));
-//        trayIcon.setImageAutoSize(true);
         final SystemTray tray = SystemTray.getSystemTray();
+
         // Create a popup menu components
-        MenuItem aboutItem = new MenuItem("About");
-        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
-        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
+        MenuItem statusItem = new MenuItem("Status");
+
         Menu displayMenu = new Menu("Display");
         MenuItem errorItem = new MenuItem("Error");
         MenuItem warningItem = new MenuItem("Warning");
         MenuItem infoItem = new MenuItem("Info");
         MenuItem noneItem = new MenuItem("None");
+
+        // Frontend Menu
+        Menu frontEndMenu = new Menu("Client");
+        MenuItem frUpdatesItem = new MenuItem("Check Updates");
+        MenuItem frLogsItem = new MenuItem("Logs");
+
+        // Backend Menu
+        Menu backEndMenu = new Menu("Server");
+        MenuItem bkUpdatesItem = new MenuItem("Check Updates");
+        Menu bkLogsItem = new Menu("Logs");
+        MenuItem bkWebAppLogItem = new MenuItem("Web App");
+        MenuItem bkPackagerLogItem = new MenuItem("Packager");
+
+        MenuItem settingsItem = new MenuItem("Settings");
         MenuItem exitItem = new MenuItem("Exit");
-        //Add components to popup menu
-        popup.add(aboutItem);
-        popup.addSeparator();
-        popup.add(cb1);
-        popup.add(cb2);
-        popup.addSeparator();
-        popup.add(displayMenu);
+
+
+        //Add components to display menu item
         displayMenu.add(errorItem);
         displayMenu.add(warningItem);
         displayMenu.add(infoItem);
         displayMenu.add(noneItem);
+
+        //Add components to display frontend item
+        frontEndMenu.add(frUpdatesItem);
+        frontEndMenu.addSeparator();
+        frontEndMenu.add(frLogsItem);
+
+        //Add components to backend menu item
+        backEndMenu.add(bkUpdatesItem);
+        backEndMenu.addSeparator();
+        backEndMenu.add(bkLogsItem);
+        bkLogsItem.add(bkWebAppLogItem);
+        bkLogsItem.addSeparator();
+        bkLogsItem.add(bkPackagerLogItem);
+
+        //Add components to popup menu
+        popup.add(displayMenu);
+        popup.add(statusItem);
+        popup.add(frontEndMenu);
+        popup.add(backEndMenu);
+        popup.add(settingsItem);
         popup.add(exitItem);
+
         trayIcon.setPopupMenu(popup);
 
         try {
             tray.add(trayIcon);
         } catch (AWTException e) {
-            System.out.println("TrayIcon could not be added.");
+            logger.error(LOG_TAG, "event", "add_trayIcon", "custom_message", e.getMessage());
             return;
         }
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                JOptionPane.showMessageDialog(null,
-//                        "This dialog box is run from System Tray");
-
-                new MainWindow().launch();
+                new UpdateView().launch();
 
             }
         });
 
-        aboutItem.addActionListener( new ActionListener() {
+
+        statusItem.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,
-                        "This dialog box is run from the About menu item");
-            }
-        });
-
-        cb1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                int cb1Id = e.getStateChange();
-                if (cb1Id == ItemEvent.SELECTED){
-                    trayIcon.setImageAutoSize(true);
-                } else {
-                    trayIcon.setImageAutoSize(false);
+                try {
+                    Prefs.getInstance().setSideBarTargetBtn("status");
+                    new UpdateView().launch();
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_status_view",
+                            "custom_message", ex.getMessage());
                 }
             }
         });
 
-        cb2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                int cb2Id = e.getStateChange();
-                if (cb2Id == ItemEvent.SELECTED){
-                    trayIcon.setToolTip("Sun TrayIcon");
-                } else {
-                    trayIcon.setToolTip(null);
+        settingsItem.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Prefs.getInstance().setSideBarTargetBtn("settings");
+                    new UpdateView().launch();
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_status_view",
+                            "custom_message", ex.getMessage());
                 }
             }
         });
@@ -141,10 +164,8 @@ public class SystemTrayUtils {
         ActionListener listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MenuItem item = (MenuItem)e.getSource();
-                //TrayIcon.MessageType type = null;
-                System.out.println(item.getLabel());
+
                 if ("Error".equals(item.getLabel())) {
-                    //type = TrayIcon.MessageType.ERROR;
                     trayIcon.displayMessage("Sun TrayIcon Demo",
                             "This is an error message", TrayIcon.MessageType.ERROR);
                 } else if ("Warning".equals(item.getLabel())) {
@@ -167,6 +188,75 @@ public class SystemTrayUtils {
         infoItem.addActionListener(listener);
         noneItem.addActionListener(listener);
 
+        frUpdatesItem.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    Prefs.getInstance().setSideBarTargetBtn("client");
+                    new UpdateView().launch();
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_client_update_view",
+                            "custom_message", ex.getMessage());
+                }
+            }
+        });
+
+
+        frLogsItem.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                // search to find the path for the info.log
+                String programFiles86Path = System.getenv("%programfiles% (x86)");
+                try {
+                    String home = System.getProperty("user.home");
+                    String path = home + File.separator + "G-POS" + File.separator +  "Logs";
+
+                    openFolder(path);
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_client_log_directory",
+                            "custom_message", ex.getMessage());
+                }
+            }
+        });
+
+        bkWebAppLogItem.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    String path = System.getenv("PUBLIC") + File.separator + "PosServer" +
+                            File.separator +  "logs";
+
+                    openFolder(path);
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_server_webapp_log_directory",
+                            "custom_message", ex.getMessage());
+                }
+            }
+        });
+
+        bkPackagerLogItem.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    String path = System.getenv("PUBLIC") + File.separator + "PosServer" +
+                            File.separator +  "packager";
+
+                    openFolder(path);
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_server_packager_log_directory",
+                            "custom_message", ex.getMessage());
+                }
+            }
+        });
+
+        bkUpdatesItem.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    Prefs.getInstance().setSideBarTargetBtn("server");
+                    new UpdateView().launch();
+                } catch (Exception ex) {
+                    logger.error(LOG_TAG, "event", "open_client_log_directory",
+                            "custom_message", ex.getMessage());
+                }
+            }
+        });
+
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //stop services
@@ -178,12 +268,49 @@ public class SystemTrayUtils {
 
     }
 
+    private static void openFolder(String path){
+        try {
+            /**
+             *  mkdirs() creates the directory named by the abstract pathname,
+             *  including any necessary but nonexistent parent directories.
+             *  Note that if this operation fails it may have succeeded in creating some of
+             *  the necessary parent directories.
+             *
+             * Usage
+             *
+             * <code>
+             *      File  f = new File("non_existing_dir/someDir");
+             *      System.out.println(f.mkdir());  ->  yields false
+             *      System.out.println(f.mkdirs()); ->  yields true
+             * <code>
+             * */
+            new File(path).mkdirs();
+            if(new File(path).exists()){
+
+                // read the path
+                File logFolder = new File(path);
+                Desktop desktop = Desktop.getDesktop();
+
+                // opens the folder using default windows explorer
+                desktop.open(logFolder);
+            }else{
+                logger.error(LOG_TAG, "event", "find_path", "custom_message",
+                        "path "+path+" doesn't exist");
+                throw new IOException("Path doesn't exist");
+            }
+
+        } catch (IOException ex) {
+            logger.error(LOG_TAG, "event", "open_frontend_log_directory",
+                    "custom_message", ex.getMessage());
+        }
+    }
+
     //Obtain the image URL
     protected static Image createImage(String path, String description) {
         URL imageURL = SystemTrayUtils.class.getClassLoader().getResource(path);
         if (imageURL == null) {
             String message = "Resource not found: " + path;
-            logger.error(LOG_TAG, "event", "Not suported", "message", message);
+            logger.error(LOG_TAG, "event", "Not_suported", "custom_message", message);
             return null;
         } else {
             return (new ImageIcon(imageURL, description)).getImage();
