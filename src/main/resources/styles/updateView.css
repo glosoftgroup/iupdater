@@ -49,14 +49,21 @@
     -fx-fill: white;
 }
 
-/* content */
-.content{
+/* content pane*/
+.contentPane{
     -fx-background-color:  #17344f;
 }
 
 /* update button */
 .updateBtn{
     -fx-background-color: -fx-purple;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.revertBtn{
+    -fx-background-color: -fx-blue;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 15px;
@@ -75,3 +82,15 @@
 .jfx-progress-bar > .bar {
     -fx-background-color: orange;
 }
+
+.console {
+    -fx-font-family: Consolas;
+    -fx-font-size: 15;
+    -fx-text-fill: #ffffff;
+    -fx-display-caret:true;
+}
+
+.console .content{
+      -fx-background-color: black;
+      -fx-fill: white;
+  }

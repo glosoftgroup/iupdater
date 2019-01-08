@@ -13,15 +13,15 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -30,13 +30,16 @@ public class UpdateViewController implements Initializable {
     public static UpdateViewController instance;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "CheckUpdate";
-    @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn, updateBtn;
+    @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn, updateBtn, revertBtn;
     @FXML AnchorPane headerAnchorPane, statusAnchorPane, updatesAnchorPane, noUpdatesAnchorPane,
             searchUpdatesAnchorPane, settingsAnchorPane;
     @FXML Label headerLabel;
     @FXML JFXProgressBar progressBar;
+    @FXML VBox featureVBox;
+    @FXML TextArea consoleField;
     private ArrayList<JFXButton> sidebarBtns = new ArrayList<>();
     private ArrayList<AnchorPane> anchorPanes = new ArrayList<>();
+    private ArrayList<String> newFeatures = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -58,6 +61,7 @@ public class UpdateViewController implements Initializable {
 
         // get the clicked button from the side nav, default is status
         fireBtnEvent(Prefs.getInstance().getSideBarTargetBtn());
+        revertBtn.setVisible(false);
     }
 
     @FXML
@@ -92,6 +96,19 @@ public class UpdateViewController implements Initializable {
             // if updates available, show the updates page
             progressBar.setVisible(false);
             setActivePane(updatesAnchorPane.getId());
+
+            Platform.runLater(()->{
+                featureVBox.getChildren().clear();
+                Label versionLabel = new Label(remoteVesion);
+                versionLabel.setStyle("-fx-font-weight: bold;-fx-font-size: 16px;");
+                featureVBox.getChildren().add(versionLabel);
+                newFeatures.stream().forEach(obj -> {
+                    Label label = new Label("➝ " + obj);
+                    label.setStyle("-fx-font-size: 16px;");
+                    featureVBox.getChildren().add(label);
+                });
+            });
+
         }else{
             // if no updates available show the no updates page
             progressBar.setVisible(false);
@@ -106,6 +123,51 @@ public class UpdateViewController implements Initializable {
         headerLabel.setText("Settings");
         progressBar.setVisible(false);
         setActivePane(settingsAnchorPane.getId());
+    }
+    public void appendText(String str) {
+        Platform.runLater(() -> consoleField.appendText(str));
+    }
+    @FXML
+    public void performUpdate(){
+        consoleField.clear();
+        progressBar.setVisible(true);
+        updateBtn.setDisable(true);
+        revertBtn.setDisable(true);
+        try {
+
+            Process p = Runtime.getRuntime().exec("ping localhost -n 6");
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            /** run the console output as a thread to avoid the system inactivity and reduce the delay time before you
+             *  see the output *
+             **/
+            Thread T = new Thread(new Runnable(){
+                /** the outputLineFromCommand string variable disables the skipping of readlines */
+                String outputLineFromCommand;
+                @Override
+                public void run() {
+                    try {
+                        while ((outputLineFromCommand = inputStream.readLine()) != null) {
+                            appendText(String.valueOf(outputLineFromCommand + "\n"));
+                        }
+                        progressBar.setVisible(false);
+                        updateBtn.setDisable(false);
+                        revertBtn.setVisible(true);
+                        revertBtn.setDisable(false);
+                    } catch (IOException e) {
+                        logger.error(LOG_TAG, "event","writing_out_put_to_textarea", "error", e.getMessage());
+                    }
+                }
+            });
+
+            T.start();
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void performRevert(){
+        // revert the update process
     }
 
     public void changeActiveClass(Event evt) {
@@ -197,6 +259,10 @@ public class UpdateViewController implements Initializable {
             remoteVersion = (String) jsonObject.get("version");
             logger.info(LOG_TAG, "event", "Read_remote_config_file", "custom_message",
                     "fetching remote version", "version", remoteVersion);
+
+            JSONArray feaureArray = (JSONArray) jsonObject.get("changedfiles");
+            newFeatures.clear();
+            feaureArray.stream().forEach(ob -> newFeatures.add(ob.toString()) );
         }catch (Exception e){
             logger.error(LOG_TAG, "event","extracting_downloaded_file_obj", "error", e.getMessage());
         }
