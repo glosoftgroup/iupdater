@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class UpdateViewController implements Initializable {
+    public static UpdateViewController instance;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "CheckUpdate";
     @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn, updateBtn;
@@ -39,6 +40,7 @@ public class UpdateViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        instance = this;
         logger.info(LOG_TAG, "event", "updateView controller", "message",
                 "initialize updateView controller");
         // the sidebar buttons array list allows one to set specific button active while the rest remain inactive
@@ -141,6 +143,7 @@ public class UpdateViewController implements Initializable {
         Platform.runLater(() -> {
             for (JFXButton button : sidebarBtns) {
                 if (button.getText().toLowerCase().contains(targetName)) {
+                    // this simulates the action event when fired
                     button.fire();
                 }
             }
