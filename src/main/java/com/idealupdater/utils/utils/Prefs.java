@@ -64,7 +64,6 @@ public class Prefs {
     public void setRemoteClientPath(String target) {
         prefs.put("RemoteClientPath", target);
     }
-
 }
 
 

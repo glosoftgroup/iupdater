@@ -2,7 +2,9 @@ package com.idealupdater.utils.ui;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
+import com.idealupdater.utils.ui.controllers.UpdateViewController;
 import com.idealupdater.utils.utils.Prefs;
+import javafx.application.Platform;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -141,7 +143,7 @@ public class SystemTrayUtils {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Prefs.getInstance().setSideBarTargetBtn("status");
-                    new UpdateView().launch();
+                    launchUpdateView("status");
                 } catch (Exception ex) {
                     logger.error(LOG_TAG, "event", "open_status_view",
                             "custom_message", ex.getMessage());
@@ -153,8 +155,9 @@ public class SystemTrayUtils {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Prefs.getInstance().setSideBarTargetBtn("settings");
-                    new UpdateView().launch();
+                    launchUpdateView("settings");
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     logger.error(LOG_TAG, "event", "open_status_view",
                             "custom_message", ex.getMessage());
                 }
@@ -192,7 +195,7 @@ public class SystemTrayUtils {
             public void actionPerformed(ActionEvent ev) {
                 try {
                     Prefs.getInstance().setSideBarTargetBtn("client");
-                    new UpdateView().launch();
+                    launchUpdateView("client");
                 } catch (Exception ex) {
                     logger.error(LOG_TAG, "event", "open_client_update_view",
                             "custom_message", ex.getMessage());
@@ -249,8 +252,9 @@ public class SystemTrayUtils {
             public void actionPerformed(ActionEvent ev) {
                 try {
                     Prefs.getInstance().setSideBarTargetBtn("server");
-                    new UpdateView().launch();
+                    launchUpdateView("server");
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     logger.error(LOG_TAG, "event", "open_client_log_directory",
                             "custom_message", ex.getMessage());
                 }
@@ -335,6 +339,14 @@ public class SystemTrayUtils {
 
         trayIcon.displayMessage("Sun TrayIcon Demo",
                 message, messageType);
+    }
+
+    public static void launchUpdateView(String action){
+        if( UpdateViewController.instance == null){
+            new UpdateView().launch();
+        }else {
+            UpdateViewController.instance.fireBtnEvent(action);
+        }
     }
 
 }
