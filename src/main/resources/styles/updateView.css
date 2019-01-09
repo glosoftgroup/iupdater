@@ -2,7 +2,8 @@
 * {
     -fx-purple : #54039b;
     -fx-blue: #0494ed;
-    -fx-green: #8cc414;
+    -fx-green: #55ab04;
+    -fx-red: #d61414;
 }
 
 /* sidebar */
@@ -19,6 +20,8 @@
     -fx-border-width: 0.1em 0px 0px 0px;
     -fx-border-color: rgba(0,0,0, 0.2);
     -fx-background-color: #17344f;
+    /* -fx-font-family: Consolas;
+    -fx-font-size: 15px; */
 }
 .sidebarBtn:hover
 {
@@ -93,4 +96,8 @@
 .console .content{
       -fx-background-color: black;
       -fx-fill: white;
-  }
+}
+
+.active-node-icon{
+      -fx-fill: -fx-green;
+}
