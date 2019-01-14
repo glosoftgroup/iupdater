@@ -458,7 +458,7 @@ public class UpdateViewController implements Initializable {
             Prefs.getInstance().setLocalClientPath(serverPath);
         }
 
-        Prefs.getInstance().setTimeout(process_timeout(updateTimeoutCbx.getSelectionModel().getSelectedIndex()));
+        Prefs.getInstance().setTimeOut(process_timeout(updateTimeoutCbx.getSelectionModel().getSelectedIndex()));
     }
 
     private int process_timeout(int index){
@@ -487,7 +487,7 @@ public class UpdateViewController implements Initializable {
 
     private int getTimeout(){
         int index = 0;
-        int value = new Prefs().getTimout();
+        int value = new Prefs().getTimeOut();
         switch(value){
             case 30 * 60 * 1000: index = 0; break;
             case 24 * 60 * 60 * 1000: index = 1; break;

@@ -74,11 +74,11 @@ public class Prefs {
         return  prefs.get("RemoteClientFile", path);
     }
 
-    public Integer getTimout(){
+    public Integer getTimeOut(){
         return prefs.getInt("timeout", 1800000);
     }
 
-    public void setTimeout(int timeInSecends){
+    public void setTimeOut(int timeInSecends){
         prefs.putInt("timeout", timeInSecends);
     }
 }
