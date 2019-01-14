@@ -42,7 +42,7 @@ public class Main {
             }
 
             try {
-                int mills = new Prefs().getTimout();
+                int mills = new Prefs().getTimeOut();
                 Thread.sleep(mills);
             } catch (Exception ex){
                 System.err.println(ex.getMessage());
