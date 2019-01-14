@@ -3,17 +3,14 @@ package com.idealupdater.utils.ui;
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import com.idealupdater.utils.ui.controllers.UpdateViewController;
-import com.idealupdater.utils.utils.Prefs;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 import javax.swing.*;
-import java.util.Optional;
+import java.awt.*;
 
 public class UpdateView {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
@@ -30,6 +27,7 @@ public class UpdateView {
                 jfxPanel.setScene(new Scene(root));
 
                 SwingUtilities.invokeLater(() -> {
+                    window.setMinimumSize(new Dimension(940, 720));
                     window.add(jfxPanel);
                     window.pack();
                     window.setLocationRelativeTo(null); // centers the window

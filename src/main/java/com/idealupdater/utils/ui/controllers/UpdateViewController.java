@@ -8,38 +8,31 @@ import com.idealupdater.utils.utils.FileDownloader;
 import com.idealupdater.utils.utils.FileUtils;
 import com.idealupdater.utils.utils.Prefs;
 import com.idealupdater.utils.utils.animation.PulseTransition;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXProgressBar;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.JFXPanel;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.util.Duration;
-import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class UpdateViewController implements Initializable {
@@ -47,16 +40,16 @@ public class UpdateViewController implements Initializable {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "CheckUpdate";
     @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn, updateBtn, revertBtn,
-            clientBrowseBtn, serverBrowseBtn;
+            clientBrowseBtn, serverBrowseBtn, saveConfigBtn;
     @FXML AnchorPane headerAnchorPane, statusAnchorPane, updatesAnchorPane, noUpdatesAnchorPane,
             searchUpdatesAnchorPane, settingsAnchorPane;
-    @FXML Label headerLabel, clientStatusLabel, serverStatusLabel;
+    @FXML Label headerLabel, clientStatusLabel, serverStatusLabel, clientDirectoryPathLabel, serverDirectoryPathLabel;
     @FXML JFXProgressBar progressBar;
     @FXML VBox featureVBox;
     @FXML TextArea consoleField;
     @FXML FontAwesomeIconView clientStatusIcon, serverStatusIcon;
     @FXML JFXToggleButton clientToggleBtn, serverToggleBtn;
-    @FXML JFXTextField clientDirectoryPathTxf, serverDirectoryPathTxf;
+    @FXML JFXComboBox updateTimeoutCbx, serverVesionCbx, clientVesionCbx;
     private ArrayList<JFXButton> sidebarBtns = new ArrayList<>();
     private ArrayList<AnchorPane> anchorPanes = new ArrayList<>();
     private ArrayList<String> newFeatures = new ArrayList<>();
@@ -88,6 +81,15 @@ public class UpdateViewController implements Initializable {
         // setup the toggle buttons listeners
         setupToggleBtnListener(clientToggleBtn, true);
         setupToggleBtnListener(serverToggleBtn, false);
+
+        // set the local installation paths
+        serverDirectoryPathLabel.setText( Prefs.getInstance().getLocalServerPath());
+        clientDirectoryPathLabel.setText(Prefs.getInstance().getLocalClientPath());
+
+        updateTimeoutCbx.getItems().addAll("30 Min","1 Day","1 Week",
+                "1 Month", "3 Sec");
+        updateTimeoutCbx.getSelectionModel().select(getTimeout());
+
     }
 
     @FXML
@@ -179,13 +181,27 @@ public class UpdateViewController implements Initializable {
 
     @FXML
     public void chooseServerDirectory(){
-        final DirectoryChooser directoryChooser = new DirectoryChooser();
-        File file = directoryChooser.showDialog(headerLabel.getScene().getWindow());
+        try {
+            final DirectoryChooser directoryChooser = new DirectoryChooser();
+            File file = directoryChooser.showDialog(headerLabel.getScene().getWindow());
 
-        if(file != null){
-            serverDirectoryPathTxf.setText(file.getAbsolutePath());
+            if(file != null && file.isDirectory()){
+                // check for log file inside of the path
+                File f = new File(file.getAbsolutePath()+"/backend_updater_config.json");
+                if (f.exists() && f.isFile()) {
+                    Platform.runLater(()->{
+                        serverDirectoryPathLabel.setText(file.getAbsolutePath());
+                    });
+                }else{
+                    Alert al = new Alert(Alert.AlertType.INFORMATION);
+                    al.setContentText("no file is found");
+                    al.show();
+                }
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
-
     }
 
     @FXML
@@ -193,10 +209,19 @@ public class UpdateViewController implements Initializable {
         final DirectoryChooser directoryChooser = new DirectoryChooser();
         File file = directoryChooser.showDialog(headerLabel.getScene().getWindow());
 
-        if(file != null){
-            clientDirectoryPathTxf.setText(file.getAbsolutePath());
+        if(file != null && file.isDirectory()){
+            // check for log file inside of the path
+            File f = new File(file.getAbsolutePath()+"/frontend_updater_config.json");
+            if (f.exists() && f.isFile()) {
+                Platform.runLater(()->{
+                    clientDirectoryPathLabel.setText(file.getAbsolutePath());
+                });
+            }else{
+                Alert al = new Alert(Alert.AlertType.INFORMATION);
+                al.setContentText("no file is found");
+                al.show();
+            }
         }
-
     }
 
     public void appendText(String str) {
@@ -291,7 +316,7 @@ public class UpdateViewController implements Initializable {
     public String getLocalVersion(){
         String localVersion = null;
         try {
-            String appPath = Prefs.getInstance().getLocalServerPath();
+            String appPath = Prefs.getInstance().getLocalServerFile();
             File f = new File(appPath);
             if (f.exists() && f.isFile()) {
                 logger.info(LOG_TAG, "event", "Read_local_config_file_path", "custom_message",
@@ -369,8 +394,6 @@ public class UpdateViewController implements Initializable {
                     }else{
 
                         try {
-//                            ApplicationUtilities.runApplication("C:\\Program Files (x86)" +
-//                                    "\\ClassicPOS Server\\ClassicPOS Server\\ClassicPOS Server.exe");
                             ApplicationUtilities.runApplication("C:\\Program Files (x86)" +
                                     "\\ClassicPOS Server\\ClassicPOS Server\\ClassicPOS Server.exe");
                         }catch(IOException|InterruptedException ex){
@@ -420,4 +443,62 @@ public class UpdateViewController implements Initializable {
         ts.setAutoReverse(false);
         return ts;
     }
+
+    @FXML
+    public void saveConfig(){
+
+        String serverPath = serverDirectoryPathLabel.getText();
+        String clientPath = clientDirectoryPathLabel.getText();
+
+        if(serverPath != null){
+            Prefs.getInstance().setLocalServerPath(serverPath);
+        }
+
+        if(clientPath != null){
+            Prefs.getInstance().setLocalClientPath(serverPath);
+        }
+
+        Prefs.getInstance().setTimeout(process_timeout(updateTimeoutCbx.getSelectionModel().getSelectedIndex()));
+    }
+
+    private int process_timeout(int index){
+        int value = 60;
+        switch (index){
+            case 0:
+                value = 30 * 60 * 1000;
+                break;
+            case 1:
+                value = 24 * 60 * 60 * 1000;
+                break;
+            case 2:
+                value = 7 * 24 * 60 * 60 * 1000;
+                break;
+            case 3:
+                Calendar c = Calendar.getInstance();
+                int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                value = monthMaxDays * 24 * 60 * 60 * 1000;
+                break;
+            case 4:
+                value = 3000;
+                break;
+        }
+        return value;
+    }
+
+    private int getTimeout(){
+        int index = 0;
+        int value = new Prefs().getTimout();
+        switch(value){
+            case 30 * 60 * 1000: index = 0; break;
+            case 24 * 60 * 60 * 1000: index = 1; break;
+            case 7 * 24 * 60 * 60 * 1000: index = 2; break;
+            case ((28 * 24 * 60 * 60 * 1000) | (29 * 24 * 60 * 60 * 1000) | (30 * 24 * 60 * 60 * 1000) | (31 * 24 * 60 * 60 * 1000)):
+                index = 3;
+                break;
+            case 3000: index = 4; break;
+            default: index = 0;
+        }
+        return index;
+    }
+
 }

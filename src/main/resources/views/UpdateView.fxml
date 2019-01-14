@@ -3,7 +3,6 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXProgressBar?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
@@ -16,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="680.0" prefWidth="953.0" stylesheets="@../styles/updateView.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.idealupdater.utils.ui.controllers.UpdateViewController">
+<AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="680.0" prefWidth="953.0" stylesheets="@../styles/updateView.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.idealupdater.utils.ui.controllers.UpdateViewController">
    <children>
       <VBox minWidth="-Infinity" prefHeight="445.0" prefWidth="169.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -197,11 +196,6 @@
             <AnchorPane fx:id="settingsAnchorPane" layoutX="60.0" layoutY="102.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="92.0">
                <children>
                   <JFXButton fx:id="serverBrowseBtn" layoutX="401.0" layoutY="46.0" onAction="#chooseServerDirectory" prefHeight="44.0" prefWidth="92.0" styleClass="updateBtn" text="Browse" AnchorPane.leftAnchor="0.0" />
-                  <JFXTextField fx:id="serverDirectoryPathTxf" layoutX="10.0" layoutY="44.0" prefHeight="44.0" prefWidth="300.0" AnchorPane.leftAnchor="110.0">
-                     <font>
-                        <Font size="19.0" />
-                     </font>
-                  </JFXTextField>
                   <Label layoutX="10.0" layoutY="7.0" text="Choose the server installation directory:" AnchorPane.leftAnchor="10.0">
                      <font>
                         <Font name="System Bold" size="17.0" />
@@ -210,13 +204,8 @@
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Label>
-                  <JFXButton fx:id="clientBrowseBtn" layoutY="184.0" onAction="#chooseClientDirectory" prefHeight="44.0" prefWidth="92.0" styleClass="updateBtn" text="Browse" AnchorPane.leftAnchor="0.0" />
-                  <JFXTextField fx:id="clientDirectoryPathTxf" layoutX="110.0" layoutY="182.0" prefHeight="44.0" prefWidth="300.0" AnchorPane.leftAnchor="110.0">
-                     <font>
-                        <Font size="19.0" />
-                     </font>
-                  </JFXTextField>
-                  <Label layoutX="10.0" layoutY="145.0" text="Choose the client installation directory:" AnchorPane.leftAnchor="10.0">
+                  <JFXButton fx:id="clientBrowseBtn" layoutY="234.0" onAction="#chooseClientDirectory" prefHeight="44.0" prefWidth="92.0" styleClass="updateBtn" text="Browse" AnchorPane.leftAnchor="0.0" />
+                  <Label layoutY="185.0" text="Choose the client installation directory:" AnchorPane.leftAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="17.0" />
                      </font>
@@ -224,7 +213,7 @@
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Label>
-                  <Label layoutX="2.0" layoutY="285.0" text="Select updates timeout period:" AnchorPane.leftAnchor="0.0">
+                  <Label layoutX="-15.0" layoutY="383.0" text="Select updates timeout period:" AnchorPane.leftAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="17.0" />
                      </font>
@@ -232,7 +221,7 @@
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </padding>
                   </Label>
-                  <JFXComboBox layoutY="329.0" prefHeight="40.0" prefWidth="251.0" promptText="10 hours" AnchorPane.leftAnchor="0.0" />
+                  <JFXComboBox fx:id="updateTimeoutCbx" layoutY="439.0" prefHeight="40.0" prefWidth="251.0" promptText="10 hours" AnchorPane.leftAnchor="0.0" />
                   <AnchorPane layoutX="446.0" layoutY="317.0" prefHeight="200.0" prefWidth="270.0" style="-fx-border-width: 2px; -fx-border-color: #ccc;" AnchorPane.rightAnchor="24.0">
                      <children>
                         <Label layoutX="32.0" layoutY="20.0" text="Version:" AnchorPane.leftAnchor="20.0">
@@ -243,7 +232,7 @@
                               <Insets bottom="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <JFXComboBox layoutX="12.0" layoutY="50.0" prefHeight="40.0" prefWidth="169.0" promptText="V1.0.1" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+                        <JFXComboBox fx:id="clientVesionCbx" layoutX="12.0" layoutY="50.0" prefHeight="40.0" prefWidth="169.0" promptText="V1.0.1" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
                         <JFXButton layoutX="21.0" layoutY="138.0" styleClass="updateBtn" text="Go to version" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
                            <padding>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
@@ -269,7 +258,7 @@
                               <Insets bottom="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <JFXComboBox layoutX="12.0" layoutY="50.0" prefHeight="40.0" prefWidth="169.0" promptText="V1.0.1" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+                        <JFXComboBox fx:id="serverVesionCbx" layoutX="12.0" layoutY="50.0" prefHeight="40.0" prefWidth="169.0" promptText="V1.0.1" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
                         <JFXButton layoutX="21.0" layoutY="138.0" styleClass="updateBtn" text="Go to version" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
                            <padding>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
@@ -285,7 +274,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <JFXButton layoutX="2.0" layoutY="467.0" style="-fx-background-color: #8cc215;" text="SAVE CONFIGURATIONS" textFill="WHITE" AnchorPane.leftAnchor="0.0">
+                  <JFXButton fx:id="saveConfigBtn" layoutY="529.0" onAction="#saveConfig" style="-fx-background-color: #8cc215;" text="SAVE CONFIGURATIONS" textFill="WHITE" AnchorPane.leftAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
@@ -293,6 +282,22 @@
                         <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                      </padding>
                   </JFXButton>
+                  <Label fx:id="serverDirectoryPathLabel" layoutX="110.0" layoutY="46.0" prefWidth="300.0" style="-fx-background-color: rgba(0,0,0,0.1);" text="Path://" wrapText="true" AnchorPane.leftAnchor="110.0">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="clientDirectoryPathLabel" layoutX="110.0" layoutY="234.0" prefWidth="300.0" style="-fx-background-color: rgba(0,0,0,0.1);" text="Path://" wrapText="true" AnchorPane.leftAnchor="110.0">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </Label>
                </children>
                <padding>
                   <Insets top="100.0" />
