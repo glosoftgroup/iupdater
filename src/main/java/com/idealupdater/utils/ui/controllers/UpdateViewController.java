@@ -193,8 +193,9 @@ public class UpdateViewController implements Initializable {
                         serverDirectoryPathLabel.setText(file.getAbsolutePath());
                     });
                 }else{
-                    Alert al = new Alert(Alert.AlertType.INFORMATION);
-                    al.setContentText("no file is found");
+                    Alert al = new Alert(Alert.AlertType.ERROR);
+                    al.setTitle("Error");
+                    al.setHeaderText("Incorrect installation folder");
                     al.show();
                 }
             }
@@ -217,8 +218,9 @@ public class UpdateViewController implements Initializable {
                     clientDirectoryPathLabel.setText(file.getAbsolutePath());
                 });
             }else{
-                Alert al = new Alert(Alert.AlertType.INFORMATION);
-                al.setContentText("no file is found");
+                Alert al = new Alert(Alert.AlertType.ERROR);
+                al.setTitle("Error");
+                al.setHeaderText("Incorrect installation folder");
                 al.show();
             }
         }
