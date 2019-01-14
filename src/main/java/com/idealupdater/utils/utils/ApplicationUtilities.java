@@ -20,6 +20,7 @@ public class ApplicationUtilities {
         ProcessBuilder processBuilder = new ProcessBuilder("tasklist.exe");
         Process process = processBuilder.start();
         String tasksList = toString(process.getInputStream());
+        System.err.println("task list " + tasksList);
 
         return tasksList.contains(processName);
     }

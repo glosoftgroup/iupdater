@@ -10,12 +10,14 @@ import com.idealupdater.utils.utils.Prefs;
 import com.idealupdater.utils.utils.animation.PulseTransition;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.JFXPanel;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +26,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
 import org.json.simple.JSONArray;
@@ -32,6 +37,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -40,7 +46,8 @@ public class UpdateViewController implements Initializable {
     public static UpdateViewController instance;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "CheckUpdate";
-    @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn, updateBtn, revertBtn;
+    @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn, updateBtn, revertBtn,
+            clientBrowseBtn, serverBrowseBtn;
     @FXML AnchorPane headerAnchorPane, statusAnchorPane, updatesAnchorPane, noUpdatesAnchorPane,
             searchUpdatesAnchorPane, settingsAnchorPane;
     @FXML Label headerLabel, clientStatusLabel, serverStatusLabel;
@@ -49,6 +56,7 @@ public class UpdateViewController implements Initializable {
     @FXML TextArea consoleField;
     @FXML FontAwesomeIconView clientStatusIcon, serverStatusIcon;
     @FXML JFXToggleButton clientToggleBtn, serverToggleBtn;
+    @FXML JFXTextField clientDirectoryPathTxf, serverDirectoryPathTxf;
     private ArrayList<JFXButton> sidebarBtns = new ArrayList<>();
     private ArrayList<AnchorPane> anchorPanes = new ArrayList<>();
     private ArrayList<String> newFeatures = new ArrayList<>();
@@ -91,8 +99,6 @@ public class UpdateViewController implements Initializable {
         setActivePane(statusAnchorPane.getId());
 
 
-        // if server is running
-        serverToggleBtn.setSelected(false);
         try {
             // if client is running
             if(ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe"))
@@ -103,9 +109,20 @@ public class UpdateViewController implements Initializable {
                 System.err.println("ClassicPOS Client.exe is not running");
                 clientToggleBtn.setSelected(false);
             }
+
+            // if server is running
+            if(ApplicationUtilities.isProcessRunning("ClassicPOS Server.exe"))
+            {
+                System.err.println("ClassicPOS Server.exe is running");
+                serverToggleBtn.setSelected(true);
+            }else{
+                System.err.println("ClassicPOS Server.exe is not running");
+                serverToggleBtn.setSelected(false);
+            }
         }catch(IOException|InterruptedException ex){
             ex.printStackTrace();
         }
+
     }
     @FXML
     public void checkClientUpdates(Event evt){
@@ -159,9 +176,33 @@ public class UpdateViewController implements Initializable {
         progressBar.setVisible(false);
         setActivePane(settingsAnchorPane.getId());
     }
+
+    @FXML
+    public void chooseServerDirectory(){
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(headerLabel.getScene().getWindow());
+
+        if(file != null){
+            serverDirectoryPathTxf.setText(file.getAbsolutePath());
+        }
+
+    }
+
+    @FXML
+    public void chooseClientDirectory(){
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(headerLabel.getScene().getWindow());
+
+        if(file != null){
+            clientDirectoryPathTxf.setText(file.getAbsolutePath());
+        }
+
+    }
+
     public void appendText(String str) {
         Platform.runLater(() -> consoleField.appendText(str));
     }
+
     @FXML
     public void performUpdate(){
         consoleField.clear();
@@ -328,6 +369,8 @@ public class UpdateViewController implements Initializable {
                     }else{
 
                         try {
+//                            ApplicationUtilities.runApplication("C:\\Program Files (x86)" +
+//                                    "\\ClassicPOS Server\\ClassicPOS Server\\ClassicPOS Server.exe");
                             ApplicationUtilities.runApplication("C:\\Program Files (x86)" +
                                     "\\ClassicPOS Server\\ClassicPOS Server\\ClassicPOS Server.exe");
                         }catch(IOException|InterruptedException ex){
