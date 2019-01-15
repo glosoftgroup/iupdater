@@ -25,14 +25,14 @@ public class Prefs {
 
     public String getLocalServerPath() {
         String path =
-                System.getenv("ProgramFiles(X86)") + "\\ClassicPOS Server\\ClassicPOS Server\\" +
-                        "backend_updater_config.json";
+                System.getenv("ProgramFiles(X86)") + "\\ClassicPOS Server\\ClassicPOS Server";
         return  prefs.get("LocalServerPath", path);
     }
 
     public void setLocalServerPath(String target) {
         prefs.put("LocalServerPath", target);
     }
+
 
     public String getRemoteServerPath() {
         String path = "https://raw.githubusercontent.com/glosoftgroup/updaterconfig/" +
@@ -46,8 +46,7 @@ public class Prefs {
 
     public String getLocalClientPath() {
         String path =
-                System.getenv("ProgramFiles(X86)") + "\\ClassicPOS Client\\ClassicPOS Client\\" +
-                        "frontend_updater_config.json";
+                System.getenv("ProgramFiles(X86)") + "\\ClassicPOS Client\\ClassicPOS Client";
         return  prefs.get("LocalClientPath", path);
     }
 
@@ -63,6 +62,24 @@ public class Prefs {
 
     public void setRemoteClientPath(String target) {
         prefs.put("RemoteClientPath", target);
+    }
+
+    public String getLocalServerFile() {
+        String path = getLocalServerPath() + "/backend_updater_config.json";
+        return  prefs.get("RemoteServerFile", path);
+    }
+
+    public String getLocalClientFile() {
+        String path = getLocalClientPath() + "/frontend_updater_config.json";
+        return  prefs.get("RemoteClientFile", path);
+    }
+
+    public Integer getTimeOut(){
+        return prefs.getInt("timeout", 1800000);
+    }
+
+    public void setTimeOut(int timeInSecends){
+        prefs.putInt("timeout", timeInSecends);
     }
 }
 

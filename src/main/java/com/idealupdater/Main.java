@@ -7,6 +7,7 @@ import com.idealupdater.utils.structlog4j.StructLog4JConfig;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import com.idealupdater.utils.structlog4j.renderers.JSONRenderer;
 import com.idealupdater.utils.ui.SystemTrayUtils;
+import com.idealupdater.utils.utils.Prefs;
 
 
 public class Main {
@@ -41,7 +42,8 @@ public class Main {
             }
 
             try {
-                Thread.sleep(1000);
+                int mills = new Prefs().getTimeOut();
+                Thread.sleep(mills);
             } catch (Exception ex){
                 System.err.println(ex.getMessage());
             }
