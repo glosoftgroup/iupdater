@@ -28,13 +28,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import sun.tools.jar.CommandLine;
 
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class UpdateViewController implements Initializable {
@@ -58,6 +56,9 @@ public class UpdateViewController implements Initializable {
     PulseTransition clientIconStatusTrans;
     PulseTransition serverIconStatusTrans;
     private String pid = null;
+    private Thread thread = null;
+
+    private volatile boolean running = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -93,6 +94,29 @@ public class UpdateViewController implements Initializable {
                 "1 Month", "3 Sec");
         updateTimeoutCbx.getSelectionModel().select(getTimeout());
 
+        // thread to check the status
+        startStatusCheckThread();
+    }
+
+    private void stopStatusCheckThread(){
+        if(thread != null){
+            thread.stop();
+            thread = null;
+        };
+    }
+
+    private void startStatusCheckThread(){
+        thread = new Thread(() -> {
+            while(true) {
+                checkStatusWithNoEventParam();
+                try {
+                    thread.sleep(5000);
+
+                } catch(InterruptedException e) { e.printStackTrace(); }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML
@@ -100,32 +124,27 @@ public class UpdateViewController implements Initializable {
         changeActiveClass(evt);
         headerLabel.setText("Status");
         progressBar.setVisible(false);
-
         setActivePane(statusAnchorPane.getId());
+        checkStatusWithNoEventParam();
+    }
+
+    public void checkStatusWithNoEventParam(){
 
         try {
             // if client is running
-            if(ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe"))
-            {
-                clientToggleBtn.setSelected(true);
-            }else{
-                clientToggleBtn.setSelected(false);
-            }
+            Boolean clientProcessIsRunning = ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe");
+            clientToggleBtn.setSelected(clientProcessIsRunning);
 
             // if server is running
             pid = ApplicationUtilities.getProcessIdFromFile(Prefs.getInstance().getLocalServerPath() +
                     "/py-dist/proc.txt");
-
-            if (ApplicationUtilities.isProcessIdRunning(pid)) {
-                serverToggleBtn.setSelected(true);
-            } else {
-                serverToggleBtn.setSelected(false);
-            }
+            Boolean serverProcessIsRunning = ApplicationUtilities.isProcessIdRunning(pid);
+            serverToggleBtn.setSelected(serverProcessIsRunning);
         }catch(IOException|InterruptedException ex){
             ex.printStackTrace();
         }
-
     }
+
     @FXML
     public void checkClientUpdates(Event evt){
         changeActiveClass(evt);
@@ -377,38 +396,77 @@ public class UpdateViewController implements Initializable {
         toggleBtn.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(toggleBtn.isSelected()==true){
-                    toggleBtn.setText("ON");
+                if(toggleBtn.isSelected() == true){
                     if(isClient){
                         try {
-                            ApplicationUtilities.runApplication("C:\\Program Files (x86)\\" +
-                                    "ClassicPOS Client\\ClassicPOS Client\\ClassicPOS Client.exe");
+                            Platform.runLater(()->{
+                                stopStatusCheckThread();
+                                try {
+                                    ApplicationUtilities.runApplication(
+                                            Prefs.getInstance().getLocalClientPath()+"\\ClassicPOS Client.exe");
 
-                            if(ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe")){
-                                clientStatusLabel.setText("Client Status: ON");
-                                clientStatusIcon.getStyleClass().add("active-node-icon");
-                                clientIconStatusTrans = startNodePulseAnimation(clientStatusIcon);
-                                clientIconStatusTrans.play();
-                            }else{
-                                toggleBtn.setSelected(false);
-                                toggleBtn.setText("OFF");
-                            }
-                        }catch(IOException|InterruptedException ex){
-                            ex.printStackTrace();
-                        }
+                                    Thread.sleep(10000);
+
+                                    // check if process name is running
+                                    if(ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe")){
+                                        toggleBtn.setText("ON");
+                                        clientStatusLabel.setText("Client Status: ON");
+                                        clientStatusIcon.getStyleClass().add("active-node-icon");
+                                        clientIconStatusTrans = startNodePulseAnimation(clientStatusIcon);
+                                        clientIconStatusTrans.play();
+                                    }else{
+                                        toggleBtn.setSelected(false);
+                                        toggleBtn.setText("OFF");
+                                    }
+                                }catch (IOException|InterruptedException ex){ ex.printStackTrace(); }
+                                startStatusCheckThread();
+                            });
+
+                        }catch(Exception ex){ ex.printStackTrace(); }
 
                     }else{
                         try {
-                            ApplicationUtilities.runApplication("C:\\Program Files (x86)" +
-                                    "\\ClassicPOS Server\\ClassicPOS Server\\ClassicPOS Server.exe");
                             if(ApplicationUtilities.isProcessIdRunning(pid)){
-                                serverStatusLabel.setText("Server Status: ON");
-                                serverStatusIcon.getStyleClass().add("active-node-icon");
-                                serverIconStatusTrans = startNodePulseAnimation(serverStatusIcon);
-                                serverIconStatusTrans.play();
+                                // if the processId is already running then change the status to on
+                                Platform.runLater(()->{
+                                    toggleBtn.setText("ON");
+                                    serverStatusLabel.setText("Server Status: ON");
+                                    serverStatusIcon.getStyleClass().add("active-node-icon");
+                                    serverIconStatusTrans = startNodePulseAnimation(serverStatusIcon);
+                                    serverIconStatusTrans.play();
+                                });
                             }else{
-                                toggleBtn.setSelected(false);
-                                toggleBtn.setText("OFF");
+                                stopStatusCheckThread();
+                                // if the process id is not running, run the server application and check if
+                                // it is running and the change the status, else let the status be OFF
+                                ApplicationUtilities.runServerApplication(Prefs.getInstance().getLocalServerPath(), pid);
+                                // run at some later time
+                                Platform.runLater(()->{
+                                    // introduce a delay of 10 seconds so that the pid can be read again
+                                    try{
+                                        Thread.sleep(10000);
+                                    }catch (InterruptedException ex){ ex.printStackTrace(); }
+
+                                    try {
+                                        pid = ApplicationUtilities.getProcessIdFromFile(
+                                                Prefs.getInstance().getLocalServerPath() +
+                                                "/py-dist/proc.txt");
+
+                                        // if the process id is running then set as required else set toggle false and
+                                        // text OFF
+                                        if (ApplicationUtilities.isProcessIdRunning(pid)) {
+                                            toggleBtn.setText("ON");
+                                            serverStatusLabel.setText("Server Status: ON");
+                                            serverStatusIcon.getStyleClass().add("active-node-icon");
+                                            serverIconStatusTrans = startNodePulseAnimation(serverStatusIcon);
+                                            serverIconStatusTrans.play();
+                                        } else {
+                                            toggleBtn.setSelected(false);
+                                            toggleBtn.setText("OFF");
+                                        }
+                                    }catch (IOException ex){ ex.printStackTrace(); }
+                                    startStatusCheckThread();
+                                });
                             }
                         }catch(IOException|InterruptedException ex){
                             ex.printStackTrace();
@@ -416,33 +474,62 @@ public class UpdateViewController implements Initializable {
                     }
                 }else{
                     if(isClient){
-                        clientStatusLabel.setText("Client Status: OFF");
-                        clientStatusIcon.getStyleClass().remove("active-node-icon");
                         // stop the pulse animation
                         if(clientIconStatusTrans!=null) clientIconStatusTrans.stop();
 
                         try {
-                            ApplicationUtilities.closeApplication("ClassicPOS Client.exe");
-                            if(!ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe")){
-                                toggleBtn.setText("OFF");
-                            }
-                        }catch(IOException|InterruptedException ex){
+                            // run sometime later
+                            Platform.runLater(()->{
+                                try {
+                                    stopStatusCheckThread();
+                                    ApplicationUtilities.closeApplication("ClassicPOS Client.exe");
+                                    // a delay to make sure the application has been closed
+                                    Thread.sleep(10000);
+
+                                    if (!ApplicationUtilities.isProcessRunning("ClassicPOS Client.exe")) {
+                                        toggleBtn.setText("OFF");
+                                        clientStatusLabel.setText("Client Status: OFF");
+                                        clientStatusIcon.getStyleClass().remove("active-node-icon");
+                                    } else {
+                                        toggleBtn.setText("ON");
+                                    }
+                                }catch(IOException|InterruptedException ex){
+                                    ex.printStackTrace();
+                                }
+                                startStatusCheckThread();
+                            });
+
+                        }catch(Exception ex){
                             ex.printStackTrace();
                         }
                     }else{
-                        serverStatusLabel.setText("Server Status: OFF");
-                        serverStatusIcon.getStyleClass().remove("active-node-icon");
                         // stop the pulse animation
                         if(serverIconStatusTrans!=null) serverIconStatusTrans.stop();
 
                         try {
                             if(pid != null) {
-                                ApplicationUtilities.killProcessId(pid);
-                                if(!ApplicationUtilities.isProcessIdRunning(pid)){
-                                    toggleBtn.setText("OFF");
-                                }
+                                // run sometime later
+                                Platform.runLater(()->{
+                                    try {
+                                        stopStatusCheckThread();
+                                        ApplicationUtilities.killProcessId(pid);
+                                        // a delay to make sure the application has been closed
+                                        Thread.sleep(10000);
+
+                                        if(!ApplicationUtilities.isProcessIdRunning(pid)){
+                                            toggleBtn.setText("OFF");
+                                            serverStatusLabel.setText("Server Status: OFF");
+                                            serverStatusIcon.getStyleClass().remove("active-node-icon");
+                                        }else{
+                                            toggleBtn.setText("ON");
+                                        }
+                                    }catch(Exception ex){
+                                        ex.printStackTrace();
+                                    }
+                                    startStatusCheckThread();
+                                });
                             }
-                        }catch(IOException ex){
+                        }catch(Exception ex){
                             ex.printStackTrace();
                         }
                     }
@@ -469,7 +556,7 @@ public class UpdateViewController implements Initializable {
         }
 
         if(clientPath != null){
-            Prefs.getInstance().setLocalClientPath(serverPath);
+            Prefs.getInstance().setLocalClientPath(clientPath);
         }
 
         Prefs.getInstance().setTimeOut(process_timeout(updateTimeoutCbx.getSelectionModel().getSelectedIndex()));

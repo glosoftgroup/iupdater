@@ -23,6 +23,15 @@ public class ApplicationUtilities {
         }
     }
 
+    public static void runServerApplication(String applicationFilePath, String processId) throws IOException, InterruptedException {
+        // cd into the installation directory and call the exe file
+        String command = "cmd /c \"cd "+applicationFilePath+" && \"ClassicPOS Server.exe\"\"";
+
+        if (!isProcessIdRunning(processId)){
+            Runtime.getRuntime().exec(command);
+        }
+    }
+
     public static boolean isProcessRunning(String processName) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder("tasklist.exe");
         Process process = processBuilder.start();
