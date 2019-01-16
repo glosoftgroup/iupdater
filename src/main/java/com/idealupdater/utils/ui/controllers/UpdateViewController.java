@@ -115,6 +115,7 @@ public class UpdateViewController implements Initializable {
             // if server is running
             pid = ApplicationUtilities.getProcessIdFromFile(Prefs.getInstance().getLocalServerPath() +
                     "/py-dist/proc.txt");
+
             if (ApplicationUtilities.isProcessIdRunning(pid)) {
                 serverToggleBtn.setSelected(true);
             } else {
@@ -441,7 +442,7 @@ public class UpdateViewController implements Initializable {
                                     toggleBtn.setText("OFF");
                                 }
                             }
-                        }catch(IOException|InterruptedException ex){
+                        }catch(IOException ex){
                             ex.printStackTrace();
                         }
                     }
