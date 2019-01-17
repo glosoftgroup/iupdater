@@ -54,7 +54,6 @@ public class SettingsController implements Initializable {
 
     @FXML
     public void saveConfig(){
-
         String serverPath = serverDirectoryPathLabel.getText();
         String clientPath = clientDirectoryPathLabel.getText();
 
@@ -67,7 +66,7 @@ public class SettingsController implements Initializable {
         }
 
         Prefs.getInstance().setTimeOut(process_timeout(updateTimeoutCbx.getSelectionModel().getSelectedIndex()));
-        new Notify().alert(rootAnchorPane, "Success", "Settings saved successfully!");
+        new Notify().showSuccess(rootAnchorPane, "Success", "Settings saved successfully!");
     }
 
     @FXML
@@ -84,7 +83,7 @@ public class SettingsController implements Initializable {
                         serverDirectoryPathLabel.setText(file.getAbsolutePath());
                     });
                 }else{
-                    new Notify().alert(rootAnchorPane, "Error", "Incorrect installation folder");
+                    new Notify().showError(rootAnchorPane, "Error", "Incorrect installation folder");
                 }
             }
 
@@ -106,7 +105,7 @@ public class SettingsController implements Initializable {
                     clientDirectoryPathLabel.setText(file.getAbsolutePath());
                 });
             }else{
-                new Notify().alert(rootAnchorPane, "Error", "Incorrect installation folder");
+                new Notify().showError(rootAnchorPane, "Error", "Incorrect installation folder");
             }
         }
     }

@@ -2,8 +2,12 @@
 * {
     -fx-purple : #54039b;
     -fx-blue: #0494ed;
+    -fx-bluehover: #163c60;
     -fx-green: #55ab04;
     -fx-red: #d61414;
+    -fx-primary: #17344f;
+    -fx-secondary: #ef7300;
+    -fx-secondaryhover: #fc7900;
 }
 
 /* sidebar */
@@ -101,3 +105,68 @@
 .active-node-icon{
       -fx-fill: -fx-green;
 }
+
+/* combobox */
+.pointsComboBox.combo-box{
+    -fx-prompt-text-fill: black;
+    -fx-background-color: #ccc;
+    -fx-font-size:14px;
+    -fx-text-alignment: center;
+    -jfx-focus-color: -fx-secondary;
+}
+
+.pointsComboBox .list-cell
+{
+    -fx-background: white;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-primary;
+    -fx-font-size:14px;
+    -fx-padding: 10;
+}
+
+.pointsComboBox .combo-box-popup .list-view
+{
+    -fx-background-color: white;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 8, 0.0 , 0 , 0 );
+}
+
+.pointsComboBox .combo-box-popup .list-view .list-cell
+{
+    -fx-padding: 10;
+    -fx-background-color: white;
+    -fx-text-fill: -fx-primary;
+    -fx-font-size:14px;
+}
+
+.pointsComboBox .combo-box-popup .list-view .list-cell:filled:selected,
+.pointsComboBox .combo-box-popup .list-view .list-cell:filled:selected:hover,
+.pointsComboBox .combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-background-color: -fx-secondary;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.pointsComboBox .combo-box-base:hover
+{
+    -fx-color: -fx-blue;
+    -fx-cursor: hand;
+}
+
+.pointsComboBox .combo-box-base:showing
+{
+    -fx-color: black;
+}
+/* end combobox */
+
+/* save config btn */
+.saveConfig{
+    -fx-background-color: -fx-secondary;
+}
+
+.saveConfig:hover{
+    -fx-background-color: -fx-secondaryhover;
+    -fx-cursor: hand;
+}
+

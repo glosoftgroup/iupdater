@@ -15,7 +15,19 @@ import javafx.scene.layout.StackPane;
 public class Notify {
     public boolean status = false;
 
-    public void alert(StackPane rootAnchorPane, String title, String message){
+    public void showSuccess(StackPane rootAnchorPane, String title, String message){
+        alert(rootAnchorPane, title, message, "success");
+    }
+
+    public void showError(StackPane rootAnchorPane, String title, String message){
+        alert(rootAnchorPane, title, message, "error");
+    }
+
+    public void showInfo(StackPane rootAnchorPane, String title, String message){
+        alert(rootAnchorPane, title, message, "info");
+    }
+
+    public void alert(StackPane rootAnchorPane, String title, String message, String type){
         JFXDialogLayout content = new JFXDialogLayout();
         Label headerLbl = new Label(title.toUpperCase());
         headerLbl.setPrefWidth(330);
@@ -27,7 +39,7 @@ public class Notify {
         // add the close icon to the button
         FontAwesomeIconView icon = new FontAwesomeIconView();
         icon.setIcon(FontAwesomeIcon.TIMES);
-        icon.setSize("20px");
+        icon.setSize("17px");
         icon.setStyle("-fx-fill: white;");
         headerBtn.setGraphic(icon);
 
@@ -53,7 +65,7 @@ public class Notify {
             }
         });
 
-        button.setOnAction(new EventHandler<javafx.event.ActionEvent>() {
+        button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 dialog.close();
@@ -61,7 +73,7 @@ public class Notify {
         });
 
         content.setActions(button, lbl);
-        content.getStylesheets().add("/styles/Alert.css");
+        content.getStylesheets().add("/styles/alerts/"+type+".css");
         dialog.setOverlayClose(false);
         dialog.show();
     }

@@ -1,11 +1,7 @@
 * {
-    -fx-purple : #54039b;
-    -fx-blue: #0494ed;
-    -fx-green: #55ab04;
-    -fx-red: #d61414;
     -fx-primary: #17344f;
-    -fx-secondary: orange;
-    -fx-secondaryhover: #ed9a02;
+    -fx-secondary: #ef7300;
+    -fx-secondaryhover: #fc7900;
 }
 
 /*Dialog styling*/
@@ -59,7 +55,7 @@
 .jfx-layout-heading .label
 {
     -fx-text-fill: white;
-    -fx-font-size: 17px;
+    -fx-font-size: 15px;
 }
 .jfx-layout-body, .jfx-layout-actions{
     -fx-background-color: -fx-primary;
