@@ -40,13 +40,13 @@
 
 .sidebarBtn-active, .sidebarBtn-active:hover
 {
-    -fx-background-color:  -fx-blue;
+    -fx-background-color:  -fx-secondary;
     -fx-text-fill: white;
 }
 
 .sidebarBtn-active:hover
 {
-    -fx-background-color:  #0386d3;
+    -fx-background-color:  -fx-secondaryhover;
     -fx-text-fill: white;
 }
 

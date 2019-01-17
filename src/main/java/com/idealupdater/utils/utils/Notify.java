@@ -71,6 +71,9 @@ public class Notify {
                 dialog.close();
             }
         });
+        dialog.setOnDialogClosed(closeEvent -> {
+            System.out.println("I am closed!");
+        });
 
         content.setActions(button, lbl);
         content.getStylesheets().add("/styles/alerts/"+type+".css");

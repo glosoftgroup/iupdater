@@ -23,7 +23,6 @@ public class SettingsController implements Initializable {
     public static SettingsController instance;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "SettingsController";
-    public boolean status = false;
 
     @FXML JFXComboBox updateTimeoutCbx;
     @FXML public JFXButton clientBrowseBtn, serverBrowseBtn, saveConfigBtn;
@@ -48,7 +47,7 @@ public class SettingsController implements Initializable {
         clientDirectoryPathLabel.setText(Prefs.getInstance().getLocalClientPath());
 
         updateTimeoutCbx.getItems().addAll("30 Min","1 Day","1 Week",
-                "1 Month", "3 Sec");
+                "1 Month");
         updateTimeoutCbx.getSelectionModel().select(getTimeout());
     }
 
@@ -83,7 +82,7 @@ public class SettingsController implements Initializable {
                         serverDirectoryPathLabel.setText(file.getAbsolutePath());
                     });
                 }else{
-                    new Notify().showError(rootAnchorPane, "Error", "Incorrect installation folder");
+                    new Notify().showError(rootAnchorPane, "Error", "Incorrect server installation folder");
                 }
             }
 
@@ -105,7 +104,7 @@ public class SettingsController implements Initializable {
                     clientDirectoryPathLabel.setText(file.getAbsolutePath());
                 });
             }else{
-                new Notify().showError(rootAnchorPane, "Error", "Incorrect installation folder");
+                new Notify().showError(rootAnchorPane, "Error", "Incorrect client installation folder");
             }
         }
     }
@@ -127,9 +126,6 @@ public class SettingsController implements Initializable {
                 int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
                 value = monthMaxDays * 24 * 60 * 60 * 1000;
                 break;
-            case 4:
-                value = 3000;
-                break;
         }
         return value;
     }
@@ -141,10 +137,8 @@ public class SettingsController implements Initializable {
             case 30 * 60 * 1000: index = 0; break;
             case 24 * 60 * 60 * 1000: index = 1; break;
             case 7 * 24 * 60 * 60 * 1000: index = 2; break;
-            case ((28 * 24 * 60 * 60 * 1000) | (29 * 24 * 60 * 60 * 1000) | (30 * 24 * 60 * 60 * 1000) | (31 * 24 * 60 * 60 * 1000)):
-                index = 3;
-                break;
-            case 3000: index = 4; break;
+            case ((28 * 24 * 60 * 60 * 1000) | (29 * 24 * 60 * 60 * 1000) | (30 * 24 * 60 * 60 * 1000) |
+                    (31 * 24 * 60 * 60 * 1000)): index = 3; break;
             default: index = 0;
         }
         return index;

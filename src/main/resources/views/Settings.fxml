@@ -57,7 +57,7 @@
                   <JFXComboBox fx:id="updateTimeoutCbx" layoutY="368.0" prefHeight="40.0" prefWidth="251.0" promptText="10 hours" styleClass="pointsComboBox" AnchorPane.leftAnchor="0.0" />
                   <JFXButton fx:id="saveConfigBtn" layoutX="-9.0" layoutY="499.0" onAction="#saveConfig" styleClass="saveConfig" text="SAVE CONFIGURATIONS" textFill="WHITE" AnchorPane.leftAnchor="0.0">
                      <font>
-                        <Font name="System Bold" size="20.0" />
+                        <Font name="System Bold" size="17.0" />
                      </font>
                      <padding>
                         <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
