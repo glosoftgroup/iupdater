@@ -193,7 +193,7 @@
                   <Insets top="100.0" />
                </padding>
             </AnchorPane>
-            <AnchorPane fx:id="settingsAnchorPane" layoutX="60.0" layoutY="102.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="92.0">
+            <AnchorPane fx:id="settingsAnchorPane" layoutX="60.0" layoutY="102.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="92.0">
                <children>
                   <JFXButton fx:id="serverBrowseBtn" layoutX="401.0" layoutY="46.0" onAction="#chooseServerDirectory" prefHeight="44.0" prefWidth="92.0" styleClass="updateBtn" text="Browse" AnchorPane.leftAnchor="0.0" />
                   <Label layoutX="10.0" layoutY="7.0" text="Choose the server installation directory:" AnchorPane.leftAnchor="10.0">

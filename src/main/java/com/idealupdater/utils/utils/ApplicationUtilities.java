@@ -23,6 +23,15 @@ public class ApplicationUtilities {
         }
     }
 
+    public static void runServerApplication(String applicationFilePath, String processId) throws IOException, InterruptedException {
+        // cd into the installation directory and call the exe file
+        String command = "cmd /c \"cd "+applicationFilePath+" && \"ClassicPOS Server.exe\"\"";
+
+        if (!isProcessIdRunning(processId)){
+            Runtime.getRuntime().exec(command);
+        }
+    }
+
     public static boolean isProcessRunning(String processName) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder("tasklist.exe");
         Process process = processBuilder.start();
@@ -68,10 +77,24 @@ public class ApplicationUtilities {
         }
     }
 
-    public static void killProcessId(String processId) throws IOException, InterruptedException {
-        String KILL = "taskkill /F /T /PID ";
-        if (isProcessRunning(processId)){
-            Runtime.getRuntime().exec(KILL + "\""+processId+"\"");
+    /**
+     * Executes batch file for task kill process.
+     * @param  processId the application process to kill
+     * The bat file is executed with the paramater of the processId
+     *  <pre>
+     *       String processId = 12345;
+     *       Runtime.getRuntime().exec("C:/User/Desktop/killProcessId.bat" +" " +processId);
+     *  </pre>
+     */
+    public static void killProcessId(String processId) throws IOException {
+        if (isProcessIdRunning(processId)){
+            logger.info(LOG_TAG, "event", "checking if process id ["+processId+"] is running",
+                    "command", Prefs.getInstance().getLocalServerPath() +
+                            "/py-dist/killProcessId.bat" +" " +processId);
+
+            Runtime.getRuntime().exec(
+                    Prefs.getInstance().getLocalServerPath() +
+                            "/py-dist/killProcessId.bat" +" " +processId);
         }
     }
 
