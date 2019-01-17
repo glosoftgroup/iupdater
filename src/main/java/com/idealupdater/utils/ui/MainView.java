@@ -2,7 +2,7 @@ package com.idealupdater.utils.ui;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
-import com.idealupdater.utils.ui.controllers.UpdateViewController;
+import com.idealupdater.utils.ui.controllers.MainViewController;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
@@ -12,9 +12,9 @@ import javafx.scene.Scene;
 import javax.swing.*;
 import java.awt.*;
 
-public class UpdateView {
+public class MainView {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
-    public static final String LOG_TAG = "ViewUpdate";
+    public static final String LOG_TAG = "MainView";
 
     public void launch(){
         JFrame window = new JFrame();
@@ -22,7 +22,7 @@ public class UpdateView {
 
         Platform.runLater(() -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/UpdateView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
                 Parent root = loader.load();
                 jfxPanel.setScene(new Scene(root));
 
@@ -42,7 +42,7 @@ public class UpdateView {
         window.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                UpdateViewController.instance = null;
+                MainViewController.instance = null;
             }
         });
     }
