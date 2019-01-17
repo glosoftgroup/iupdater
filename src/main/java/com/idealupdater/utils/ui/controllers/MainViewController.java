@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.io.*;
@@ -29,7 +30,7 @@ public class MainViewController implements Initializable {
     @FXML public JFXButton statusBtn, clientUpdateBtn, serverUpdateBtn, settingsBtn;
     @FXML public AnchorPane holderPane;
 
-    AnchorPane statusAnchorPane, clientUpdateAnchorPane, serverUpdateAnchorPane, settingsAnchorPane;
+    StackPane statusAnchorPane, clientUpdateAnchorPane, serverUpdateAnchorPane, settingsAnchorPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

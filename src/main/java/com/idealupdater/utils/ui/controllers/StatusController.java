@@ -4,54 +4,39 @@ import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import com.idealupdater.utils.ui.SystemTrayUtils;
 import com.idealupdater.utils.utils.ApplicationUtilities;
-import com.idealupdater.utils.utils.FileDownloader;
-import com.idealupdater.utils.utils.FileUtils;
 import com.idealupdater.utils.utils.Prefs;
 import com.idealupdater.utils.utils.animation.PulseTransition;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXToggleButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import javafx.scene.layout.StackPane;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class StatusController implements Initializable {
     public static StatusController instance;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "StatusController";
+    PulseTransition clientIconStatusTrans;
+    PulseTransition serverIconStatusTrans;
+    private String pid = null;
+    private Thread thread = null;
 
     @FXML Label headerLabel, clientStatusLabel, serverStatusLabel;
     @FXML FontAwesomeIconView clientStatusIcon, serverStatusIcon;
     @FXML JFXToggleButton clientToggleBtn, serverToggleBtn;
     @FXML AnchorPane mainAnchorPane;
-
-    PulseTransition clientIconStatusTrans;
-    PulseTransition serverIconStatusTrans;
-    private String pid = null;
-    private Thread thread = null;
+    @FXML StackPane rootAnchorPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,8 +45,8 @@ public class StatusController implements Initializable {
                 "initialize status View controller");
 
         // adjust the screen accordingly
-        mainAnchorPane.prefHeightProperty().bind(MainViewController.instance.holderPane.heightProperty());
-        mainAnchorPane.prefWidthProperty().bind(MainViewController.instance.holderPane.widthProperty());
+        rootAnchorPane.prefHeightProperty().bind(MainViewController.instance.holderPane.heightProperty());
+        rootAnchorPane.prefWidthProperty().bind(MainViewController.instance.holderPane.widthProperty());
 
         // setup the toggle buttons listeners
         setupToggleBtnListener(clientToggleBtn, true);

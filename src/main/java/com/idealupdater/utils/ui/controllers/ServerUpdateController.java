@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -36,6 +37,8 @@ public class ServerUpdateController implements Initializable {
     @FXML TextArea consoleField;
     @FXML public JFXButton updateBtn, revertBtn;
     @FXML AnchorPane mainAnchorPane;
+    @FXML
+    StackPane rootAnchorPane;
 
 
 
@@ -46,8 +49,8 @@ public class ServerUpdateController implements Initializable {
                 "initialize ServerUpdateController");
 
         // adjust the screen accordingly
-        mainAnchorPane.prefHeightProperty().bind(MainViewController.instance.holderPane.heightProperty());
-        mainAnchorPane.prefWidthProperty().bind(MainViewController.instance.holderPane.widthProperty());
+        rootAnchorPane.prefHeightProperty().bind(MainViewController.instance.holderPane.heightProperty());
+        rootAnchorPane.prefWidthProperty().bind(MainViewController.instance.holderPane.widthProperty());
 
         progressBar.setVisible(true);
 

@@ -3,16 +3,15 @@ package com.idealupdater.utils.ui.controllers;
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import com.idealupdater.utils.ui.SystemTrayUtils;
+import com.idealupdater.utils.utils.Notify;
 import com.idealupdater.utils.utils.Prefs;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXProgressBar;
+import com.jfoenix.controls.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 
 import java.io.File;
@@ -24,12 +23,14 @@ public class SettingsController implements Initializable {
     public static SettingsController instance;
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "SettingsController";
+    public boolean status = false;
 
     @FXML JFXComboBox updateTimeoutCbx;
     @FXML public JFXButton clientBrowseBtn, serverBrowseBtn, saveConfigBtn;
     @FXML JFXProgressBar progressBar;
     @FXML Label headerLabel, clientDirectoryPathLabel, serverDirectoryPathLabel;
     @FXML AnchorPane mainAnchorPane;
+    @FXML StackPane rootAnchorPane;
 
 
     @Override
@@ -39,8 +40,8 @@ public class SettingsController implements Initializable {
                 "initialize SettingsController");
 
         // adjust the screen accordingly
-        mainAnchorPane.prefHeightProperty().bind(MainViewController.instance.holderPane.heightProperty());
-        mainAnchorPane.prefWidthProperty().bind(MainViewController.instance.holderPane.widthProperty());
+        rootAnchorPane.prefHeightProperty().bind(MainViewController.instance.holderPane.heightProperty());
+        rootAnchorPane.prefWidthProperty().bind(MainViewController.instance.holderPane.widthProperty());
 
         // set the local installation paths
         serverDirectoryPathLabel.setText( Prefs.getInstance().getLocalServerPath());
@@ -66,6 +67,7 @@ public class SettingsController implements Initializable {
         }
 
         Prefs.getInstance().setTimeOut(process_timeout(updateTimeoutCbx.getSelectionModel().getSelectedIndex()));
+        new Notify().alert(rootAnchorPane, "Success", "Settings saved successfully!");
     }
 
     @FXML
@@ -82,10 +84,7 @@ public class SettingsController implements Initializable {
                         serverDirectoryPathLabel.setText(file.getAbsolutePath());
                     });
                 }else{
-                    Alert al = new Alert(Alert.AlertType.ERROR);
-                    al.setTitle("Error");
-                    al.setHeaderText("Incorrect installation folder");
-                    al.show();
+                    new Notify().alert(rootAnchorPane, "Error", "Incorrect installation folder");
                 }
             }
 
@@ -107,10 +106,7 @@ public class SettingsController implements Initializable {
                     clientDirectoryPathLabel.setText(file.getAbsolutePath());
                 });
             }else{
-                Alert al = new Alert(Alert.AlertType.ERROR);
-                al.setTitle("Error");
-                al.setHeaderText("Incorrect installation folder");
-                al.show();
+                new Notify().alert(rootAnchorPane, "Error", "Incorrect installation folder");
             }
         }
     }
@@ -154,7 +150,6 @@ public class SettingsController implements Initializable {
         }
         return index;
     }
-
 
 
 }
