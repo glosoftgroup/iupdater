@@ -1,0 +1,67 @@
+* {
+    -fx-primary: #17344f;
+    -fx-secondary: #ef7300;
+    -fx-secondaryhover: #fc7900;
+}
+
+/*Dialog styling*/
+.dialog-button{
+    -fx-border-color: -fx-secondary;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px 10px 20px;
+    -fx-font-size:15px;
+    -fx-font-weight:bold;
+    -fx-border-radius:3px;
+    -fx-background-radius:3px;
+}
+
+.dialog-button:hover{
+    -fx-background-color: -fx-secondaryhover;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.close-button{
+    -fx-background-color: -fx-secondary;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px 10px 20px;
+    -fx-font-size:18px;
+    -fx-font-weight:bold;
+    -fx-border-radius:5px;
+    -fx-background-radius:5px;
+}
+
+.close-button:hover{
+    -fx-background-color: -fx-secondary;
+    -fx-text-fill: white;
+}
+
+.close-icon:hover{
+    -fx-cursor: hand;
+}
+
+
+.jfx-layout-actions
+{
+    -fx-hgap:8;
+}
+
+
+/*JFXDialog styling*/
+.jfx-layout-heading
+{
+    -fx-background-color: -fx-secondary;
+}
+.jfx-layout-heading .label
+{
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+.jfx-layout-body, .jfx-layout-actions{
+    -fx-background-color: -fx-primary;
+}
+.jfx-layout-body .label
+{
+    -fx-text-fill: white;
+    -fx-padding: 20px 0 0 0;
+}

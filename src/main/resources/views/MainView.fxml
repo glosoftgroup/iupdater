@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="680.0" prefWidth="953.0" stylesheets="@../styles/updateView.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.idealupdater.utils.ui.controllers.MainViewController">
+   <children>
+      <VBox minWidth="-Infinity" prefHeight="445.0" prefWidth="169.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <JFXButton fx:id="statusBtn" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#checkStatus" prefHeight="400.0" prefWidth="200.0" styleClass="sidebarBtn" text="STATUS" textAlignment="CENTER">
+               <graphic>
+                  <FontAwesomeIconView glyphName="HEARTBEAT" size="25" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="clientUpdateBtn" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#checkClientUpdates" prefHeight="400.0" prefWidth="200.0" styleClass="sidebarBtn" text="CLIENT UPDATES" textAlignment="CENTER">
+               <graphic>
+                  <FontAwesomeIconView glyphName="TICKET" size="25" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="serverUpdateBtn" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#checkServerUpdates" prefHeight="400.0" prefWidth="200.0" styleClass="sidebarBtn" text="SERVER UPDATES" textAlignment="CENTER">
+               <graphic>
+                  <FontAwesomeIconView glyphName="CHAIN" size="25" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="settingsBtn" contentDisplay="TOP" layoutX="10.0" layoutY="223.0" mnemonicParsing="false" onAction="#settings" prefHeight="400.0" prefWidth="200.0" styleClass="sidebarBtn" text="SETTINGS" textAlignment="CENTER">
+               <graphic>
+                  <FontAwesomeIconView glyphName="COG" size="25" />
+               </graphic>
+            </JFXButton>
+         </children>
+      </VBox>
+      <AnchorPane fx:id="holderPane" layoutX="163.0" prefHeight="623.0" prefWidth="614.0" style="-fx-background-color: #fbfbfb;" styleClass="contentPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="163.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>

@@ -2,9 +2,8 @@ package com.idealupdater.utils.ui;
 
 import com.idealupdater.utils.structlog4j.LoggerFactory;
 import com.idealupdater.utils.structlog4j.interfaces.Logger;
-import com.idealupdater.utils.ui.controllers.UpdateViewController;
+import com.idealupdater.utils.ui.controllers.MainViewController;
 import com.idealupdater.utils.utils.Prefs;
-import javafx.application.Platform;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -133,7 +132,7 @@ public class SystemTrayUtils {
         }
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new UpdateView().launch();
+                new MainView().launch();
 
             }
         });
@@ -342,10 +341,10 @@ public class SystemTrayUtils {
     }
 
     public static void launchUpdateView(String action){
-        if( UpdateViewController.instance == null){
-            new UpdateView().launch();
+        if(MainViewController.instance == null){
+            new MainView().launch();
         }else {
-            UpdateViewController.instance.fireBtnEvent(action);
+            MainViewController.instance.fireBtnEvent(action);
         }
     }
 
