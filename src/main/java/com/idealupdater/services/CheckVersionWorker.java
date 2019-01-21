@@ -58,10 +58,10 @@ public class CheckVersionWorker implements Runnable{
                 }
 
                 // uncomment after solving the run once inside the thread
-                if(!remoteVersion.equals(localVersion)){
-                    // show the new updates message
-                    new SystemTrayUtils().displayMessage("New updates detected", SystemTrayUtils.Level.INFO);
-                }
+//                if(!remoteVersion.equals(localVersion)){
+//                    // show the new updates message
+//                    new SystemTrayUtils().displayMessage("New updates detected", SystemTrayUtils.Level.INFO);
+//                }
             }else{
                 logger.info(LOG_TAG, "event", "Read_local_config_file_path", "custom_message",
                         "file not exist", "path", appPath);

@@ -5,12 +5,15 @@ import com.idealupdater.utils.structlog4j.interfaces.Logger;
 import com.idealupdater.utils.ui.SystemTrayUtils;
 import com.idealupdater.utils.utils.FileDownloader;
 import com.idealupdater.utils.utils.FileUtils;
+import com.idealupdater.utils.utils.Notify;
 import com.idealupdater.utils.utils.Prefs;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXProgressBar;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
@@ -23,6 +26,8 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -31,6 +36,7 @@ public class ServerUpdateController implements Initializable {
     public static final Logger logger = LoggerFactory.getLogger(SystemTrayUtils.class);
     public static final String LOG_TAG = "ServerUpdateController";
     private ArrayList<String> newFeatures = new ArrayList<>();
+    BufferedReader inputStream = null;
 
     @FXML JFXProgressBar progressBar;
     @FXML VBox featureVBox;
@@ -79,6 +85,22 @@ public class ServerUpdateController implements Initializable {
         }
     }
 
+    public JSONObject getFileObject(String appPath){
+        JSONObject fileJsonObject = new JSONObject();
+        try {
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader(appPath));
+            fileJsonObject =  (JSONObject) obj;
+        } catch (FileNotFoundException e) {
+            logger.error(LOG_TAG, "event","returning_file_obj", "error", e.getMessage());
+        } catch (IOException e) {
+            logger.error(LOG_TAG, "event","returning_file_obj", "error", e.getMessage());
+        } catch (ParseException e) {
+            logger.error(LOG_TAG, "event","returning_file_obj", "error", e.getMessage());
+        }
+        return fileJsonObject;
+    }
+
     public String getLocalVersion(){
         String localVersion = null;
         try {
@@ -88,8 +110,8 @@ public class ServerUpdateController implements Initializable {
                 logger.info(LOG_TAG, "event", "Read_local_config_file_path", "custom_message",
                         "file exists", "path", appPath);
 
-                JSONParser parser = new JSONParser();
                 try {
+                    JSONParser parser = new JSONParser();
                     Object obj = parser.parse(new FileReader(appPath));
                     JSONObject fileJsonObject =  (JSONObject) obj;
                     // set the localVersion from the local file
@@ -143,45 +165,98 @@ public class ServerUpdateController implements Initializable {
 
     @FXML
     public void performUpdate(){
+
         consoleField.clear();
         progressBar.setVisible(true);
         updateBtn.setDisable(true);
         revertBtn.setDisable(true);
-        try {
 
-            Process p = Runtime.getRuntime().exec("ping localhost -n 6");
-            BufferedReader inputStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            /** run the console output as a thread to avoid the system inactivity and reduce the delay time before you
-             *  see the output *
-             **/
+        String backendConfigFilePath = Prefs.getInstance().getLocalServerFile();
+        String appPath = Prefs.getInstance().getLocalServerPath() +"\\app";
+        String pythonExe = Prefs.getInstance().getLocalServerPath() +"\\py-dist\\python-2.7.10\\python.exe";
+
+        try {
+            /* git pull process */
+            Process gitProcess = Runtime.getRuntime().exec(
+                    "cmd /c \"cd "+appPath+" && cmd /c git pull 2>&1\"");
+            BufferedReader gitInputStream = new BufferedReader(new InputStreamReader(gitProcess.getInputStream()));
+            /* make migrations process */
+            Process makeMigrationsProcess = Runtime.getRuntime().exec(
+                    "cmd /c \"cd "+appPath+" && cmd /c \""+pythonExe+"\" manage.pyc makemigrations 2>&1\"");
+            BufferedReader makeMigrationsInputStream = new BufferedReader(new InputStreamReader(makeMigrationsProcess.getInputStream()));
+            /* migrate process */
+            Process migrateProcess = Runtime.getRuntime().exec(
+                    "cmd /c \"cd "+appPath+" && cmd /c \""+pythonExe+"\" manage.pyc migrate 2>&1\"");
+            BufferedReader migrateInputStream = new BufferedReader(new InputStreamReader(migrateProcess.getInputStream()));
+            /* npm install process */
+            Process npmProcess = Runtime.getRuntime().exec(
+                    "cmd /c \"cd "+appPath+" && cmd /c npm install 2>&1\"");
+            BufferedReader npmInputStream = new BufferedReader(new InputStreamReader(npmProcess.getInputStream()));
+            /* yarn build-assets */
+            Process yarnBuildProcess = Runtime.getRuntime().exec("cmd /c \"cd "+appPath+" && cmd /c yarn build-assets\"");
+            BufferedReader yarnBuildInputStream = new BufferedReader(new InputStreamReader(yarnBuildProcess.getInputStream()));
+
             Thread T = new Thread(new Runnable(){
                 /** the outputLineFromCommand string variable disables the skipping of readlines */
                 String outputLineFromCommand;
                 @Override
                 public void run() {
                     try {
-                        while ((outputLineFromCommand = inputStream.readLine()) != null) {
+
+                        appendText("Starting the update process ... \n");
+                        /* write git pull stream to textarea */
+                        appendText("Getting the new updates ... \n");
+                        while ((outputLineFromCommand = gitInputStream.readLine()) != null) {
                             appendText(String.valueOf(outputLineFromCommand + "\n"));
                         }
+                        appendText("\nMaking migrations ... \n");
+                        /* write make-migrations stream to textarea */
+                        while ((outputLineFromCommand = makeMigrationsInputStream.readLine()) != null) {
+                            appendText(String.valueOf(outputLineFromCommand + "\n"));
+                        }
+                        appendText("\nPersisting migrations ... \n");
+                        /* write migrate stream to textarea */
+                        while ((outputLineFromCommand = migrateInputStream.readLine()) != null) {
+                            appendText(String.valueOf(outputLineFromCommand + "\n"));
+                        }
+
+                        /* write npm install stream to textarea */
+                        appendText("\nUpdating packages ... \n");
+                        while ((outputLineFromCommand = npmInputStream.readLine()) != null) {
+                            appendText(String.valueOf(outputLineFromCommand + "\n"));
+                        }
+                        /* write yarn build assets stream to textarea */
+                        appendText("\nBundling packages ... \n");
+                        while ((outputLineFromCommand = yarnBuildInputStream.readLine()) != null) {
+                            appendText(String.valueOf(outputLineFromCommand + "\n"));
+                        }
+                        appendText("Ending the update process! \n");
+
                         progressBar.setVisible(false);
                         updateBtn.setDisable(false);
                         revertBtn.setVisible(true);
                         revertBtn.setDisable(false);
                     } catch (IOException e) {
+                        e.printStackTrace();
                         logger.error(LOG_TAG, "event","writing_out_put_to_textarea", "error", e.getMessage());
+                        appendText("Error fetching updates! Please contact the Administrator. \n");
                     }
                 }
             });
 
             T.start();
         }catch (IOException ex){
+            ex.printStackTrace();
             logger.error(LOG_TAG, "event","perform_update", "error", ex.getMessage());
         }
+
+
     }
 
     @FXML
     public void performRevert(){
         // revert the update process
+        new Notify().CreateConfirmDialog("Go back the previous version", "Revert Update");
     }
 
 }

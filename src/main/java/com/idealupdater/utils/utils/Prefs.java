@@ -81,6 +81,14 @@ public class Prefs {
     public void setTimeOut(int timeInSecends){
         prefs.putInt("timeout", timeInSecends);
     }
+
+    public boolean getDialogChoice(){
+        return prefs.getBoolean("dialog", false);
+    }
+
+    public void setDialogChoice(boolean dialogChoice){
+        prefs.putBoolean("dialog", dialogChoice);
+    }
 }
 
 
