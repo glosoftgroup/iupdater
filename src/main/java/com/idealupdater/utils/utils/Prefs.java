@@ -35,8 +35,7 @@ public class Prefs {
 
 
     public String getRemoteServerPath() {
-        String path = "https://raw.githubusercontent.com/glosoftgroup/updaterconfig/" +
-                "master/backend_updater_config.json";
+        String path = "https://raw.githubusercontent.com/glosoftgroup/classic-pck/master/backend_updater_config.json";
         return  prefs.get("RemoteServerPath", path);
     }
 
@@ -66,12 +65,12 @@ public class Prefs {
 
     public String getLocalServerFile() {
         String path = getLocalServerPath() + "/backend_updater_config.json";
-        return  prefs.get("RemoteServerFile", path);
+        return  prefs.get("LocalServerFile", path);
     }
 
     public String getLocalClientFile() {
         String path = getLocalClientPath() + "/frontend_updater_config.json";
-        return  prefs.get("RemoteClientFile", path);
+        return  prefs.get("LocalClientFile", path);
     }
 
     public Integer getTimeOut(){
@@ -80,14 +79,6 @@ public class Prefs {
 
     public void setTimeOut(int timeInSecends){
         prefs.putInt("timeout", timeInSecends);
-    }
-
-    public boolean getDialogChoice(){
-        return prefs.getBoolean("dialog", false);
-    }
-
-    public void setDialogChoice(boolean dialogChoice){
-        prefs.putBoolean("dialog", dialogChoice);
     }
 }
 

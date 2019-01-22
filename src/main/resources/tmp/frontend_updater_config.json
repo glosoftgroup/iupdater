@@ -1,6 +1,6 @@
 {
-  "version": "1.0.4",
-  "last_version": "1.0.2",
+  "version": "1.0.0",
+  "last_version": "0.0.0",
   "changelog": {
     "date": "Images/Sun.png",
     "name": "sun1",
@@ -12,10 +12,40 @@
   "migrations": true,
   "webpackconfig": true,
   "targetmachine": "mac-address",
-  "commithash": "<hash>",
+  "commithash": "da819d7c07403b6b10f988cb3b5b6c5d12cda0bb",
+  "features": [
+  	"New reports design",
+  	"Added tax reports",
+  	"Added happy hour :- module name is Discount"
+  ],
+  "newfeatures": [
+  	{
+		"title": "New reports design", 
+		"description": "Added download capability of the pdfs"
+	},
+	{
+		"title": "Tax reports", 
+		"description": "Tax calculations based no sales and reports presentation"
+	},
+	{
+		"title": "Happy hour discount", 
+		"description": "One can choose any product or number of products and define their prices as discounts. Add time and date to be applied."
+	},
+  	{"title": "New dashboard reports", "description": ""},
+  	{"title": "", "description": ""}
+  ],
   "changedfiles": [
-    "src/main/java/com/idealupdater/services/CheckVersionWorker.java",
-    "mac-address",
-    "src/main/java/com/idealupdater/services/CheckVersionWorker.java"
+    ".gitignore",
+    "LICENSE",
+    "README.md",
+    "backend_updater_config.json",
+    "docs/",
+    "locale/",
+    "package.json",
+    "requirements.txt",
+    "saleor/",
+    "templates/",
+    "tests/",
+    "webpack.config.js"
   ]
 }

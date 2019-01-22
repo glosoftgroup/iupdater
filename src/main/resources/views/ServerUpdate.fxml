@@ -7,11 +7,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <StackPane fx:id="rootAnchorPane" prefHeight="680.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.idealupdater.utils.ui.controllers.ServerUpdateController">
    <children>
@@ -27,6 +28,22 @@
                         <Insets left="30.0" />
                      </padding>
                   </Label>
+                  <JFXButton fx:id="refreshUpdatesBtn" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="588.0" layoutY="13.0" onAction="#checkNewUpdates" style="-fx-background-color: orange;" text="check update" textFill="WHITE" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="13.0">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                     </padding>
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" size="30.0" />
+                     </graphic>
+                  </JFXButton>
+                  <Label layoutX="449.0" layoutY="25.0" text="Check new updates" textFill="WHITE" AnchorPane.rightAnchor="227.0" AnchorPane.topAnchor="25.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
             <JFXProgressBar fx:id="progressBar" layoutX="163.0" layoutY="70.0" prefHeight="9.0" prefWidth="661.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0" />
@@ -37,46 +54,37 @@
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Label>
-                  <ScrollPane layoutY="83.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+                  <ScrollPane prefHeight="185.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
                      <content>
-                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="546.0">
+                        <VBox fx:id="featureVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="182.0" prefWidth="686.0" spacing="5.0">
                            <children>
-                              <VBox fx:id="featureVBox" prefHeight="182.0" prefWidth="614.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                                 <children>
-                                    <Label fx:id="versionLabel" text="V1.0.1">
-                                       <font>
-                                          <Font name="System Bold" size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text=" ➝ new login button">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text=" ➝ finance module">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text=" ➝ tax report">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
+                              <Label fx:id="versionLabel" text="V1.0.1">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label text=" ➝ new login button">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" ➝ finance module">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label text=" ➝ tax report">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
                            </children>
-                        </AnchorPane>
+                        </VBox>
                      </content>
                   </ScrollPane>
                   <JFXButton fx:id="updateBtn" layoutY="304.0" onAction="#performUpdate" prefHeight="44.0" prefWidth="185.0" styleClass="updateBtn" text="UPDATE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="280.0" />
-                  <TextArea fx:id="consoleField" editable="false" prefHeight="200.0" styleClass="console" text="Console Output!" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="366.0" />
-                  <ScrollPane layoutX="10.0" layoutY="93.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" visible="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="366.0">
-                     <content>
-                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="546.0" />
-                     </content>
-                  </ScrollPane>
-                  <JFXButton fx:id="revertBtn" layoutX="10.0" layoutY="314.0" onAction="#performRevert" prefHeight="44.0" styleClass="revertBtn" text="BACK TO OLD VERSION" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="280.0">
+                  <TextArea fx:id="consoleField" editable="false" prefHeight="200.0" styleClass="console" text="Console Output!" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="366.0" />
+                  <JFXButton fx:id="revertBtn" layoutX="10.0" layoutY="314.0" onAction="#performRevert" prefHeight="44.0" styleClass="revertBtn" text="BACK TO OLD VERSION" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="280.0">
                      <padding>
                         <Insets left="20.0" right="20.0" />
                      </padding>
@@ -85,6 +93,48 @@
                      </graphic>
                   </JFXButton>
                </children>
+            </AnchorPane>
+            <AnchorPane fx:id="searchAnchorPane" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
+               <children>
+                  <Label alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/search.gif" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label alignment="CENTER" text="checking new updates ...." AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0">
+                     <font>
+                        <Font name="System Bold" size="21.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets top="100.0" />
+               </padding>
+            </AnchorPane>
+            <AnchorPane fx:id="noUpdatesAnchorPane" layoutX="10.0" layoutY="10.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
+               <children>
+                  <Label alignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <graphic>
+                        <ImageView fitHeight="150.0" fitWidth="354.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/no-update.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <Label alignment="CENTER" text="No new updates available." AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="180.0">
+                     <font>
+                        <Font name="System Bold" size="21.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets top="100.0" />
+               </padding>
             </AnchorPane>
          </children>
       </AnchorPane>
